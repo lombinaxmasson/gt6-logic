@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "gt6logic:block/alarm_bell_side",
+    "down": "gt6logic:block/alarm_bell_side",
+    "up": "gt6logic:block/alarm_bell_side",
+    "north": "gt6logic:block/alarm_bell_ringing",
+    "east": "gt6logic:block/alarm_bell_side",
+    "south": "gt6logic:block/alarm_bell_side",
+    "west": "gt6logic:block/alarm_bell_side"
+  }
+}

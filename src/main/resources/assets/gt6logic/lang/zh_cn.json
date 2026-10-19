@@ -1,4 +1,9 @@
 {
   "itemGroup.gt6logic": "GT6 逻辑",
-  "block.gt6logic.indicator": "指示灯"
+  "block.gt6logic.indicator": "指示灯",
+  "block.gt6logic.alarm_bell": "报警铃",
+  "message.gt6logic.alarm_bell.status": "超过 %s 级就响 · %s",
+  "message.gt6logic.alarm_bell.timbre.bell": "铃",
+  "message.gt6logic.alarm_bell.timbre.chime": "钟",
+  "message.gt6logic.alarm_bell.timbre.pling": "叮"
 }

@@ -1,4 +1,9 @@
 {
   "itemGroup.gt6logic": "GT6 Logic",
-  "block.gt6logic.indicator": "Indicator"
+  "block.gt6logic.indicator": "Indicator",
+  "block.gt6logic.alarm_bell": "Alarm Bell",
+  "message.gt6logic.alarm_bell.status": "Rings above %s · %s",
+  "message.gt6logic.alarm_bell.timbre.bell": "Bell",
+  "message.gt6logic.alarm_bell.timbre.chime": "Chime",
+  "message.gt6logic.alarm_bell.timbre.pling": "Pling"
 }

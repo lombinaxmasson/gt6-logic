@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 
 import com.gregtech.gregtech.api.addon.GregTechAddon;
 import com.gregtech.gregtech.api.addon.GregTechAddons;
+import com.lombinaxmasson.gt6logic.block.AlarmBellBlock;
 import com.lombinaxmasson.gt6logic.block.IndicatorBlock;
 import com.mojang.logging.LogUtils;
 
@@ -48,6 +49,7 @@ public final class Gt6Logic {
 
     public Gt6Logic(IEventBus modEventBus, ModContainer modContainer) {
         IndicatorBlock.bootstrap();
+        AlarmBellBlock.bootstrap();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
