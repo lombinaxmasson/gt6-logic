@@ -28,8 +28,25 @@ public final class HysteresisSwitch {
         return lower <= upper;
     }
 
+    public Mode mode() {
+        return mode;
+    }
+
+    public long lower() {
+        return lower;
+    }
+
+    public long upper() {
+        return upper;
+    }
+
     public boolean output() {
         return on;
+    }
+
+    /** Puts the remembered bit back after a world load or a preset change. */
+    public void remember(boolean on) {
+        this.on = on;
     }
 
     /** Applies one reading. An invalid pair leaves the output unchanged. */

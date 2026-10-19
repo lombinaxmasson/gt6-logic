@@ -1,0 +1,7 @@
+{
+  "parent": "gt6logic:block/plate",
+  "textures": {
+    "front": "gt6logic:block/kitchen_timer",
+    "lamp": "gt6logic:block/lamp_on"
+  }
+}

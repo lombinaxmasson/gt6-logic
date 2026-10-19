@@ -18,6 +18,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -32,6 +33,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -50,6 +53,7 @@ public final class AlarmBellBlock extends Block implements EntityBlock {
                     .mapColor(MapColor.GOLD)
                     .strength(1.0F)
                     .sound(SoundType.METAL)
+                    .noOcclusion()
                     .isRedstoneConductor((state, getter, pos) -> true)));
 
     public static final DeferredItem<BlockItem> ITEM = Gt6Logic.ITEMS.register("alarm_bell",
@@ -75,6 +79,11 @@ public final class AlarmBellBlock extends Block implements EntityBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return PlateShapes.bell(state.getValue(FACING));
     }
 
     @Override

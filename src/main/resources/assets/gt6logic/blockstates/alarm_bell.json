@@ -8,13 +8,13 @@
       "model": "gt6logic:block/alarm_bell_ringing",
       "x": 90
     },
-    "facing=east,ringing=false": {
+    "facing=up,ringing=false": {
       "model": "gt6logic:block/alarm_bell",
-      "y": 90
+      "x": 270
     },
-    "facing=east,ringing=true": {
+    "facing=up,ringing=true": {
       "model": "gt6logic:block/alarm_bell_ringing",
-      "y": 90
+      "x": 270
     },
     "facing=north,ringing=false": {
       "model": "gt6logic:block/alarm_bell"
@@ -30,14 +30,6 @@
       "model": "gt6logic:block/alarm_bell_ringing",
       "y": 180
     },
-    "facing=up,ringing=false": {
-      "model": "gt6logic:block/alarm_bell",
-      "x": 270
-    },
-    "facing=up,ringing=true": {
-      "model": "gt6logic:block/alarm_bell_ringing",
-      "x": 270
-    },
     "facing=west,ringing=false": {
       "model": "gt6logic:block/alarm_bell",
       "y": 270
@@ -45,6 +37,14 @@
     "facing=west,ringing=true": {
       "model": "gt6logic:block/alarm_bell_ringing",
       "y": 270
+    },
+    "facing=east,ringing=false": {
+      "model": "gt6logic:block/alarm_bell",
+      "y": 90
+    },
+    "facing=east,ringing=true": {
+      "model": "gt6logic:block/alarm_bell_ringing",
+      "y": 90
     }
   }
 }

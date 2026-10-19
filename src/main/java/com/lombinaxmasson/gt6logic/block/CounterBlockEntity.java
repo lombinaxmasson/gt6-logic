@@ -10,6 +10,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** Front counts pulses. Back resets. The other four faces carry the latched output. */
@@ -24,6 +27,7 @@ public final class CounterBlockEntity extends SignalBlockEntity {
     private Mode mode = Mode.OPEN;
     private int target = PulseCounter.DEFAULT_TARGET;
     private PulseCounter counter = new PulseCounter(mode, target);
+    private int sentCount = -1;
 
     public CounterBlockEntity(BlockPos pos, BlockState state) {
         super(CounterBlock.TYPE.get(), pos, state);
@@ -45,6 +49,12 @@ public final class CounterBlockEntity extends SignalBlockEntity {
         return counter.output();
     }
 
+    /** Three quarters of a turn at the target, so a full count does not land on the empty mark. */
+    public float needleAngle() {
+        float fraction = counter.count() / (float) Math.max(1, target);
+        return fraction * ((float) Math.PI * 1.5F);
+    }
+
     public Component status() {
         String key = mode == Mode.OPEN
                 ? "message.gt6logic.counter.open"
@@ -56,12 +66,14 @@ public final class CounterBlockEntity extends SignalBlockEntity {
         target = PulseCounter.nextTarget(target);
         counter = new PulseCounter(mode, target);
         setChanged();
+        publishDial();
     }
 
     public void cycleMode() {
         mode = mode.next();
         counter = new PulseCounter(mode, target);
         setChanged();
+        publishDial();
     }
 
     @Override
@@ -76,6 +88,26 @@ public final class CounterBlockEntity extends SignalBlockEntity {
         boolean on = counter.update(pulse, reset);
         FaceSignals.send(output(), on ? FaceSignals.ON : 0L, facing, facing.getOpposite());
         BlockFeedback.setPowered(this, CounterBlock.POWERED, on);
+        if (counter.count() != sentCount) {
+            publishDial();
+        }
+    }
+
+    private void publishDial() {
+        sentCount = counter.count();
+        BlockFeedback.syncClient(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override

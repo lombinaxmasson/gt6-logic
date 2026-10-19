@@ -1,49 +1,95 @@
 {
   "variants": {
-    "facing=down,powered=false": {
+    "facing=down,powered=false,span=16": {
       "model": "gt6logic:block/compensation_repeater",
       "x": 90
     },
-    "facing=down,powered=true": {
+    "facing=down,powered=true,span=16": {
       "model": "gt6logic:block/compensation_repeater_on",
       "x": 90
     },
-    "facing=up,powered=false": {
+    "facing=down,powered=false,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64",
+      "x": 90
+    },
+    "facing=down,powered=true,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64_on",
+      "x": 90
+    },
+    "facing=up,powered=false,span=16": {
       "model": "gt6logic:block/compensation_repeater",
       "x": 270
     },
-    "facing=up,powered=true": {
+    "facing=up,powered=true,span=16": {
       "model": "gt6logic:block/compensation_repeater_on",
       "x": 270
     },
-    "facing=north,powered=false": {
+    "facing=up,powered=false,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64",
+      "x": 270
+    },
+    "facing=up,powered=true,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64_on",
+      "x": 270
+    },
+    "facing=north,powered=false,span=16": {
       "model": "gt6logic:block/compensation_repeater"
     },
-    "facing=north,powered=true": {
+    "facing=north,powered=true,span=16": {
       "model": "gt6logic:block/compensation_repeater_on"
     },
-    "facing=south,powered=false": {
+    "facing=north,powered=false,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64"
+    },
+    "facing=north,powered=true,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64_on"
+    },
+    "facing=south,powered=false,span=16": {
       "model": "gt6logic:block/compensation_repeater",
       "y": 180
     },
-    "facing=south,powered=true": {
+    "facing=south,powered=true,span=16": {
       "model": "gt6logic:block/compensation_repeater_on",
       "y": 180
     },
-    "facing=west,powered=false": {
+    "facing=south,powered=false,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64",
+      "y": 180
+    },
+    "facing=south,powered=true,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64_on",
+      "y": 180
+    },
+    "facing=west,powered=false,span=16": {
       "model": "gt6logic:block/compensation_repeater",
       "y": 270
     },
-    "facing=west,powered=true": {
+    "facing=west,powered=true,span=16": {
       "model": "gt6logic:block/compensation_repeater_on",
       "y": 270
     },
-    "facing=east,powered=false": {
+    "facing=west,powered=false,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64",
+      "y": 270
+    },
+    "facing=west,powered=true,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64_on",
+      "y": 270
+    },
+    "facing=east,powered=false,span=16": {
       "model": "gt6logic:block/compensation_repeater",
       "y": 90
     },
-    "facing=east,powered=true": {
+    "facing=east,powered=true,span=16": {
       "model": "gt6logic:block/compensation_repeater_on",
+      "y": 90
+    },
+    "facing=east,powered=false,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64",
+      "y": 90
+    },
+    "facing=east,powered=true,span=64": {
+      "model": "gt6logic:block/compensation_repeater_64_on",
       "y": 90
     }
   }

@@ -10,6 +10,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** One input, in front. The wait is saved so a reload does not start the second over. */
@@ -22,6 +25,8 @@ public final class DelayRelayBlockEntity extends SignalBlockEntity {
     private Mode mode = Mode.ON_DELAY;
     private int seconds = DelayRelay.SECONDS[0];
     private DelayRelay relay = new DelayRelay(mode, ticks());
+    /** Last wait step sent to clients. The hand moves in sixteenths, not every tick. */
+    private int sentBucket = -1;
 
     public DelayRelayBlockEntity(BlockPos pos, BlockState state) {
         super(DelayRelayBlock.TYPE.get(), pos, state);
@@ -43,6 +48,17 @@ public final class DelayRelayBlockEntity extends SignalBlockEntity {
         return relay.output();
     }
 
+    /** Clockwise from straight up. A finished wait sits just short of a full turn, so it does not look like zero. */
+    public float needleAngle() {
+        int delay = Math.max(1, relay.delay());
+        int waited = Math.min(relay.waited(), delay);
+        float turns = waited / (float) delay;
+        if (turns >= 1F) {
+            turns = 15.5F / 16F;
+        }
+        return turns * ((float) Math.PI * 2F);
+    }
+
     public Component status() {
         String key = mode == Mode.ON_DELAY
                 ? "message.gt6logic.delay_relay.on_delay"
@@ -54,12 +70,14 @@ public final class DelayRelayBlockEntity extends SignalBlockEntity {
         seconds = DelayRelay.nextSeconds(seconds);
         relay = new DelayRelay(mode, ticks());
         setChanged();
+        publishNeedle();
     }
 
     public void cycleMode() {
         mode = mode.next();
         relay = new DelayRelay(mode, ticks());
         setChanged();
+        publishNeedle();
     }
 
     @Override
@@ -73,6 +91,35 @@ public final class DelayRelayBlockEntity extends SignalBlockEntity {
         boolean on = relay.update(input);
         FaceSignals.send(output(), on ? FaceSignals.ON : 0L, facing);
         BlockFeedback.setPowered(this, DelayRelayBlock.POWERED, on);
+        int bucket = needleBucket();
+        if (bucket != sentBucket) {
+            publishNeedle();
+        }
+    }
+
+    private int needleBucket() {
+        int delay = Math.max(1, relay.delay());
+        if (relay.waited() >= delay) {
+            return 16;
+        }
+        return relay.waited() * 16 / delay;
+    }
+
+    private void publishNeedle() {
+        sentBucket = needleBucket();
+        BlockFeedback.syncClient(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override

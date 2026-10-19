@@ -28,7 +28,7 @@ public abstract class SignalBlockEntity extends BlockEntity implements GtSignalS
         super(type, pos, state);
     }
 
-    protected final PublishedSignal output() {
+    public final PublishedSignal output() {
         return output;
     }
 

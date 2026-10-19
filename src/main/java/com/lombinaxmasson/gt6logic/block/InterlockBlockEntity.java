@@ -10,6 +10,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** Enough means the ceiling is at least one level. NOT ignores the back face. */
@@ -38,6 +40,7 @@ public final class InterlockBlockEntity extends SignalBlockEntity {
     public void cycleMode() {
         mode = mode.next();
         setChanged();
+        show(getBlockState().getValue(InterlockBlock.POWERED));
     }
 
     @Override
@@ -51,7 +54,21 @@ public final class InterlockBlockEntity extends SignalBlockEntity {
         boolean second = SignalLevels.ceilingLevel(read(facing.getOpposite())) >= 1;
         boolean on = Interlock.output(mode, first, second);
         FaceSignals.send(output(), on ? FaceSignals.ON : 0L, facing, facing.getOpposite());
-        BlockFeedback.setPowered(this, InterlockBlock.POWERED, on);
+        show(on);
+    }
+
+    private void show(boolean on) {
+        Level level = getLevel();
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        BlockState state = getBlockState();
+        BlockState next = state
+                .setValue(InterlockBlock.POWERED, on)
+                .setValue(InterlockBlock.GATE, InterlockBlock.Gate.of(mode));
+        if (next != state) {
+            level.setBlock(worldPosition, next, Block.UPDATE_CLIENTS);
+        }
     }
 
     @Override

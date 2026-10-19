@@ -1,7 +1,5 @@
 package com.lombinaxmasson.gt6logic.client;
 
-import org.joml.Quaternionf;
-
 import com.lombinaxmasson.gt6logic.block.SignalMeterBlock;
 import com.lombinaxmasson.gt6logic.block.SignalMeterBlockEntity;
 
@@ -13,7 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-/** Draws the four-decimal level on the face the meter is listening through. */
+/** Draws the four-decimal level on the room side of the plate. */
 public final class SignalMeterRenderer implements BlockEntityRenderer<SignalMeterBlockEntity> {
     private final Font font;
 
@@ -33,9 +31,10 @@ public final class SignalMeterRenderer implements BlockEntityRenderer<SignalMete
         String text = entity.formatted();
         pose.pushPose();
         pose.translate(0.5, 0.5, 0.5);
-        pose.mulPose(facingOut(facing));
-        pose.translate(0.0, 0.0, 0.501);
-        float scale = 0.015F;
+        pose.mulPose(PlateTurn.of(facing));
+        // Room side of the plate. The dark window ends just behind this.
+        pose.translate(0.0, 0.0, -0.5 + 2.7 / 16.0);
+        float scale = 0.010F;
         pose.scale(scale, -scale, scale);
         float width = font.width(text);
         font.drawInBatch(
@@ -50,17 +49,5 @@ public final class SignalMeterRenderer implements BlockEntityRenderer<SignalMete
                 0,
                 LightTexture.FULL_BRIGHT);
         pose.popPose();
-    }
-
-    /** Local +Z points out of the listened face, so the glyphs face the player standing there. */
-    private static Quaternionf facingOut(Direction facing) {
-        return switch (facing) {
-            case SOUTH -> new Quaternionf();
-            case NORTH -> new Quaternionf().rotateY((float) Math.PI);
-            case EAST -> new Quaternionf().rotateY((float) (-Math.PI / 2.0));
-            case WEST -> new Quaternionf().rotateY((float) (Math.PI / 2.0));
-            case UP -> new Quaternionf().rotateX((float) (-Math.PI / 2.0));
-            case DOWN -> new Quaternionf().rotateX((float) (Math.PI / 2.0));
-        };
     }
 }

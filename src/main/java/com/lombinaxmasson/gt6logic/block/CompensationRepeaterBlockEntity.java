@@ -9,6 +9,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** Restores {@code UNIT / range} on a positive input. Zero stays zero. */
@@ -32,6 +34,7 @@ public final class CompensationRepeaterBlockEntity extends SignalBlockEntity {
     public void cycleRange() {
         range = HopCompensation.nextRange(range);
         setChanged();
+        show(getBlockState().getValue(CompensationRepeaterBlock.POWERED));
     }
 
     @Override
@@ -43,7 +46,21 @@ public final class CompensationRepeaterBlockEntity extends SignalBlockEntity {
         Direction facing = state.getValue(CompensationRepeaterBlock.FACING);
         long restored = HopCompensation.restore(read(facing), range);
         FaceSignals.send(output(), restored, facing);
-        BlockFeedback.setPowered(this, CompensationRepeaterBlock.POWERED, SignalLevels.ceilingLevel(restored) >= 1);
+        show(SignalLevels.ceilingLevel(restored) >= 1);
+    }
+
+    private void show(boolean on) {
+        Level level = getLevel();
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        BlockState state = getBlockState();
+        BlockState next = state
+                .setValue(CompensationRepeaterBlock.POWERED, on)
+                .setValue(CompensationRepeaterBlock.SPAN, CompensationRepeaterBlock.Span.of(range));
+        if (next != state) {
+            level.setBlock(worldPosition, next, Block.UPDATE_CLIENTS);
+        }
     }
 
     @Override

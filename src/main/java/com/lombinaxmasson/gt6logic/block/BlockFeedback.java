@@ -19,6 +19,16 @@ final class BlockFeedback {
         }
     }
 
+    /** Sends the block entity's update tag. The chunk packet is built from {@code getUpdateTag}. */
+    static void syncClient(BlockEntity entity) {
+        Level level = entity.getLevel();
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        BlockState state = entity.getBlockState();
+        level.sendBlockUpdated(entity.getBlockPos(), state, state, Block.UPDATE_CLIENTS);
+    }
+
     static void setPowered(BlockEntity entity, BooleanProperty property, boolean on) {
         Level level = entity.getLevel();
         if (level == null) {

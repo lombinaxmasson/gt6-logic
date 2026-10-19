@@ -1,12 +1,100 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "minecraft:block/block",
+  "ambientocclusion": false,
   "textures": {
-    "particle": "gt6logic:block/signal_meter_side",
-    "down": "gt6logic:block/signal_meter_side",
-    "up": "gt6logic:block/signal_meter_side",
-    "north": "gt6logic:block/signal_meter",
-    "east": "gt6logic:block/signal_meter_side",
-    "south": "gt6logic:block/signal_meter_side",
-    "west": "gt6logic:block/signal_meter_side"
-  }
+    "particle": "gt6logic:block/signal_meter",
+    "edge": "gt6logic:block/plate_edge",
+    "front": "gt6logic:block/signal_meter",
+    "window": "gt6logic:block/signal_meter_window"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.08
+      ],
+      "to": [
+        16,
+        16,
+        2.08
+      ],
+      "faces": {
+        "north": {
+          "texture": "#edge"
+        },
+        "south": {
+          "texture": "#front"
+        },
+        "east": {
+          "texture": "#edge",
+          "uv": [
+            0,
+            0,
+            2,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#edge",
+          "uv": [
+            0,
+            0,
+            2,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#edge",
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#edge",
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4.5,
+        2.08
+      ],
+      "to": [
+        13,
+        11.5,
+        2.55
+      ],
+      "faces": {
+        "north": {
+          "texture": "#window"
+        },
+        "south": {
+          "texture": "#window"
+        },
+        "east": {
+          "texture": "#window"
+        },
+        "west": {
+          "texture": "#window"
+        },
+        "up": {
+          "texture": "#window"
+        },
+        "down": {
+          "texture": "#window"
+        }
+      }
+    }
+  ]
 }

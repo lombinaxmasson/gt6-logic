@@ -1,12 +1,6 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "gt6logic:block/plate_plain",
   "textures": {
-    "particle": "gt6logic:block/selector_switch_side",
-    "down": "gt6logic:block/selector_switch_side",
-    "up": "gt6logic:block/selector_switch_side",
-    "north": "gt6logic:block/selector_switch",
-    "east": "gt6logic:block/selector_switch_side",
-    "south": "gt6logic:block/selector_switch_side",
-    "west": "gt6logic:block/selector_switch_side"
+    "front": "gt6logic:block/selector_switch"
   }
 }

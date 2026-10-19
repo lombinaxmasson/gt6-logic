@@ -9,6 +9,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** The selected face is the only input. Every other face repeats that signal, fraction included. */
@@ -38,6 +41,7 @@ public final class SelectorSwitchBlockEntity extends SignalBlockEntity {
         Direction[] values = Direction.values();
         input = values[(input().ordinal() + 1) % values.length];
         setChanged();
+        BlockFeedback.syncClient(this);
     }
 
     @Override
@@ -49,6 +53,18 @@ public final class SelectorSwitchBlockEntity extends SignalBlockEntity {
         long value = GtSignalCarrier.clamp(read(input()));
         FaceSignals.send(output(), value, input());
         BlockFeedback.setPowered(this, SelectorSwitchBlock.POWERED, SignalLevels.ceilingLevel(value) >= 1);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag tag = new CompoundTag();
+        saveAdditional(tag, registries);
+        return tag;
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override

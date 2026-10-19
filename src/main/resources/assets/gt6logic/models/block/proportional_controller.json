@@ -1,0 +1,7 @@
+{
+  "parent": "gt6logic:block/plate",
+  "textures": {
+    "front": "gt6logic:block/proportional_controller",
+    "lamp": "gt6logic:block/lamp_off"
+  }
+}

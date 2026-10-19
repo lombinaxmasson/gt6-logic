@@ -14,6 +14,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,6 +27,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -40,6 +43,7 @@ public final class DelayRelayBlock extends SignalBlock {
                     .mapColor(MapColor.COLOR_BLUE)
                     .strength(1.0F)
                     .sound(SoundType.METAL)
+                    .noOcclusion()
                     .lightLevel(state -> state.getValue(POWERED) ? 7 : 0)
                     .isRedstoneConductor((state, getter, pos) -> false)));
 
@@ -65,6 +69,11 @@ public final class DelayRelayBlock extends SignalBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return PlateShapes.plate(state.getValue(FACING));
     }
 
     @Override

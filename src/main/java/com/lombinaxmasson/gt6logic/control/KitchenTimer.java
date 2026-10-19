@@ -5,6 +5,8 @@ package com.lombinaxmasson.gt6logic.control;
  * Read {@link #output()} and then call {@link #tick()}. Phase starts at 0, so the first read is on.
  */
 public final class KitchenTimer {
+    public static final int TICKS_PER_SECOND = 20;
+
     private final int period;
     private final int duration;
     private int phase;
@@ -15,6 +17,27 @@ public final class KitchenTimer {
         }
         this.period = period;
         this.duration = duration;
+    }
+
+    public int period() {
+        return period;
+    }
+
+    public int duration() {
+        return duration;
+    }
+
+    public int phase() {
+        return phase;
+    }
+
+    /** Same clock as the constructor, with a phase restored from a save. A negative phase starts at 0. */
+    public static KitchenTimer resumed(int period, int duration, int phase) {
+        KitchenTimer timer = new KitchenTimer(period, duration);
+        if (phase > 0) {
+            timer.phase = phase % period;
+        }
+        return timer;
     }
 
     public boolean output() {

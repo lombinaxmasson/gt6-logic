@@ -5,6 +5,7 @@ import com.lombinaxmasson.gt6logic.Gt6Logic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -17,6 +18,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -35,6 +38,7 @@ public final class IndicatorBlock extends Block implements EntityBlock {
                     .mapColor(MapColor.COLOR_RED)
                     .strength(0.3F)
                     .sound(SoundType.GLASS)
+                    .noOcclusion()
                     .lightLevel(state -> state.getValue(LIT) ? 15 : 0)
                     .isRedstoneConductor((state, getter, pos) -> true)));
 
@@ -56,6 +60,11 @@ public final class IndicatorBlock extends Block implements EntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIT);
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return PlateShapes.LAMP;
     }
 
     @Override

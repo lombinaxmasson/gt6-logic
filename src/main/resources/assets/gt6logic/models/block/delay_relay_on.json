@@ -1,12 +1,7 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "gt6logic:block/plate",
   "textures": {
-    "particle": "gt6logic:block/delay_relay_side",
-    "down": "gt6logic:block/delay_relay_side",
-    "up": "gt6logic:block/delay_relay_side",
-    "north": "gt6logic:block/delay_relay_on",
-    "east": "gt6logic:block/delay_relay_side",
-    "south": "gt6logic:block/delay_relay_side",
-    "west": "gt6logic:block/delay_relay_side"
+    "front": "gt6logic:block/delay_relay",
+    "lamp": "gt6logic:block/lamp_on"
   }
 }

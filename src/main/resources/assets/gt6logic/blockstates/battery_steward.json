@@ -1,0 +1,40 @@
+{
+  "variants": {
+    "facing=down,powered=false": {
+      "model": "gt6logic:block/battery_steward", "x": 90
+    },
+    "facing=down,powered=true": {
+      "model": "gt6logic:block/battery_steward_on", "x": 90
+    },
+    "facing=up,powered=false": {
+      "model": "gt6logic:block/battery_steward", "x": 270
+    },
+    "facing=up,powered=true": {
+      "model": "gt6logic:block/battery_steward_on", "x": 270
+    },
+    "facing=north,powered=false": {
+      "model": "gt6logic:block/battery_steward"
+    },
+    "facing=north,powered=true": {
+      "model": "gt6logic:block/battery_steward_on"
+    },
+    "facing=south,powered=false": {
+      "model": "gt6logic:block/battery_steward", "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "gt6logic:block/battery_steward_on", "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "gt6logic:block/battery_steward", "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "gt6logic:block/battery_steward_on", "y": 270
+    },
+    "facing=east,powered=false": {
+      "model": "gt6logic:block/battery_steward", "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "gt6logic:block/battery_steward_on", "y": 90
+    }
+  }
+}

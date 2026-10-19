@@ -1,12 +1,7 @@
 {
-  "parent": "minecraft:block/cube",
+  "parent": "gt6logic:block/plate",
   "textures": {
-    "particle": "gt6logic:block/counter_side",
-    "down": "gt6logic:block/counter_side",
-    "up": "gt6logic:block/counter_side",
-    "north": "gt6logic:block/counter",
-    "east": "gt6logic:block/counter_side",
-    "south": "gt6logic:block/counter_side",
-    "west": "gt6logic:block/counter_side"
+    "front": "gt6logic:block/counter",
+    "lamp": "gt6logic:block/lamp_off"
   }
 }

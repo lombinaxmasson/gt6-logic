@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "gt6logic:block/electric_meter"
+    },
+    "powered=true": {
+      "model": "gt6logic:block/electric_meter_on"
+    }
+  }
+}
