@@ -11,6 +11,7 @@ GT6CE 的 NeoForge 1.21.1 附属：一批友好的控制元件（恒温器、浮
 - [`docs/content.md`](docs/content.md)：内容设计。设计原则、元件清单、工艺机器、进度安排。
 - [`docs/production-ideas.md`](docs/production-ideas.md)：需要控制电路的产线和配方点子，持续收集。
 - [`docs/integration.md`](docs/integration.md)：和 GT6CE 的对接。用到的 API、它们的实际行为、要向上游提的接口。
+- [`docs/card-plans/`](docs/card-plans/)：计划卡。正在做的在 `active/`，排队的在 `prep/`，做完的在 `closed/`。
 
 ## 开发
 

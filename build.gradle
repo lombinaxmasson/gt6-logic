@@ -114,6 +114,7 @@ dependencies {
     // The full mod jar is the dev and test runtime. Neither jar is packaged into this one.
     compileOnly gtSdk
     localRuntime gtMod
+    testCompileOnly gtSdk
     testRuntimeOnly gtMod
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
