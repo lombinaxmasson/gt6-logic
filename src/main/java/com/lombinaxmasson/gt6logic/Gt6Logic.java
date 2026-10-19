@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 
 import com.gregtech.gregtech.api.addon.GregTechAddon;
 import com.gregtech.gregtech.api.addon.GregTechAddons;
+import com.lombinaxmasson.gt6logic.block.IndicatorBlock;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.Registries;
@@ -11,7 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -41,12 +41,13 @@ public final class Gt6Logic {
             CREATIVE_MODE_TABS.register("main", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.gt6logic"))
                     .withTabsBefore(CreativeModeTabs.REDSTONE_BLOCKS)
-                    .icon(() -> new ItemStack(Items.COMPARATOR))
+                    .icon(() -> new ItemStack(IndicatorBlock.ITEM.get()))
                     .displayItems((parameters, output) -> ITEMS.getEntries()
                             .forEach(item -> output.accept(item.get())))
                     .build());
 
     public Gt6Logic(IEventBus modEventBus, ModContainer modContainer) {
+        IndicatorBlock.bootstrap();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);

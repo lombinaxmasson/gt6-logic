@@ -65,7 +65,7 @@ GT6 Logic 给 GT6 加两类东西：
 
 ## 元件清单
 
-按“玩家什么时候需要它”分档。每个元件都写明它解决什么问题，具体的方块实现参考 [`integration.md`](integration.md)。
+按“玩家什么时候需要它”分档。每个元件都写明它解决什么问题，具体的方块实现参考 [`integration.md`](integration.md)。要做哪些、做到哪一步，以 [`components.md`](components.md) 为准。
 
 ### 第一档：入门（一个方块解决问题）
 

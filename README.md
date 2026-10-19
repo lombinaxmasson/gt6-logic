@@ -4,11 +4,13 @@ GT6CE 的 NeoForge 1.21.1 附属：一批友好的控制元件（恒温器、浮
 
 目标是让 GT6 的自动化变得更有意思，同时不变得更难：最常见的需求用一个方块、设两个数就能解决，信号线和逻辑组合是可选的进阶玩法。
 
-> 项目刚起步，目前只有工程骨架和设计文档，还没有游戏内容。
+> 指示灯已经能放下来。信号双缓冲、回差判定和厨房定时器的节拍已经合入。逻辑元件的分母在 [`docs/components.md`](docs/components.md)。
 
 ## 文档
 
 - [`docs/content.md`](docs/content.md)：内容设计。设计原则、元件清单、工艺机器、进度安排。
+- [`docs/components.md`](docs/components.md)：逻辑元件总集。18 块逻辑方块、5 块执行器，以及做到哪一步。
+- [`docs/how-logic-works.md`](docs/how-logic-works.md)：这些元件在算什么。电平、组合逻辑、时序逻辑，对照到具体方块。
 - [`docs/production-ideas.md`](docs/production-ideas.md)：需要控制电路的产线和配方点子，持续收集。
 - [`docs/integration.md`](docs/integration.md)：和 GT6CE 的对接。用到的 API、它们的实际行为、要向上游提的接口。
 - [`docs/card-plans/`](docs/card-plans/)：计划卡。正在做的在 `active/`，排队的在 `prep/`，做完的在 `closed/`。
