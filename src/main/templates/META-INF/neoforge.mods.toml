@@ -1,0 +1,36 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+# SPDX identifier from gradle.properties (mod_license): LGPL-3.0-or-later.
+license="${mod_license}"
+issueTrackerURL="https://github.com/lombinaxmasson/gt6-logic/issues"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+displayURL="https://github.com/lombinaxmasson/gt6-logic"
+authors="lombinaxmasson"
+description='''
+Friendly control blocks and process machines for GT6CE: thermostats, float switches, timers, valves, and the machines that need them.
+'''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neo_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="gregtech6"
+    type="required"
+    versionRange="[0.7,)"
+    ordering="AFTER"
+    side="BOTH"
