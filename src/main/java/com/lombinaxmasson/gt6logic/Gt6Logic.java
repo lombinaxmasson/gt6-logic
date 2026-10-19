@@ -5,7 +5,13 @@ import org.slf4j.Logger;
 import com.gregtech.gregtech.api.addon.GregTechAddon;
 import com.gregtech.gregtech.api.addon.GregTechAddons;
 import com.lombinaxmasson.gt6logic.block.AlarmBellBlock;
+import com.lombinaxmasson.gt6logic.block.CompensationRepeaterBlock;
+import com.lombinaxmasson.gt6logic.block.CounterBlock;
+import com.lombinaxmasson.gt6logic.block.DelayRelayBlock;
 import com.lombinaxmasson.gt6logic.block.IndicatorBlock;
+import com.lombinaxmasson.gt6logic.block.InterlockBlock;
+import com.lombinaxmasson.gt6logic.block.SelectorSwitchBlock;
+import com.lombinaxmasson.gt6logic.block.SignalMeterBlock;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.Registries;
@@ -50,6 +56,12 @@ public final class Gt6Logic {
     public Gt6Logic(IEventBus modEventBus, ModContainer modContainer) {
         IndicatorBlock.bootstrap();
         AlarmBellBlock.bootstrap();
+        DelayRelayBlock.bootstrap();
+        CounterBlock.bootstrap();
+        InterlockBlock.bootstrap();
+        SignalMeterBlock.bootstrap();
+        CompensationRepeaterBlock.bootstrap();
+        SelectorSwitchBlock.bootstrap();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);

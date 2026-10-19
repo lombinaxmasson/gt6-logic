@@ -1,6 +1,7 @@
 package com.lombinaxmasson.gt6logic.signal;
 
 import com.gregtech.gregtech.api.signal.GtSignalCarrier;
+import com.gregtech.gregtech.api.signal.GtSignalSource;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,6 +28,10 @@ public final class SignalInputs {
         BlockEntity entity = level.getBlockEntity(neighbor);
         if (entity instanceof GtSignalCarrier carrier) {
             return GtSignalCarrier.clamp(carrier.signal());
+        }
+        if (entity instanceof GtSignalSource source) {
+            // Same side index getSignal would use: the direction from the reader toward this neighbor.
+            return GtSignalCarrier.clamp(source.gtSignal(towardNeighbor.ordinal()));
         }
         return SignalLevels.fromLevel(level.getSignal(neighbor, towardNeighbor));
     }

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "gt6logic:block/compensation_repeater_side",
+    "down": "gt6logic:block/compensation_repeater_side",
+    "up": "gt6logic:block/compensation_repeater_side",
+    "north": "gt6logic:block/compensation_repeater",
+    "east": "gt6logic:block/compensation_repeater_side",
+    "south": "gt6logic:block/compensation_repeater_side",
+    "west": "gt6logic:block/compensation_repeater_side"
+  }
+}

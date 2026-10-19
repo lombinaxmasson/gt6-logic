@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "gt6logic:block/signal_meter_side",
+    "down": "gt6logic:block/signal_meter_side",
+    "up": "gt6logic:block/signal_meter_side",
+    "north": "gt6logic:block/signal_meter",
+    "east": "gt6logic:block/signal_meter_side",
+    "south": "gt6logic:block/signal_meter_side",
+    "west": "gt6logic:block/signal_meter_side"
+  }
+}

@@ -40,7 +40,7 @@ SDK 里的三个接口：`GtSignalCarrier`、`GtSignalSource`、`GtSignalReceive
 - **元件只实现 `GtSignalSource`，不要同时实现 `GtSignalReceiver`。** 两个都实现时按接收端处理，输出会被吞掉。不需要输出的面，在 `gtSignal(side)` 里返回 0。
 - **只接收、不输出的方块**（显示屏、报警器、执行器）实现 `GtSignalReceiver`，或者加进 `gregtech:signal_wire_receivers` 标签。
 - **`gtSignal(side)` 必须是纯读取**：直接返回缓存好的值，不要在里面读世界。信号线采样期间，GT 线自己的 `output()` 会返回 0，在采样回调里再去读别的线会读到错误的值。
-- **读输入**：相邻方块实体是 `GtSignalCarrier` 时读 `signal()`；否则读 `level.getSignal(neighborPos, dir) * UNIT`，这样原版红石也能当输入。
+- **读输入**：相邻方块实体是 `GtSignalCarrier` 时读 `signal()`，信号线的分数留着。否则若它是 `GtSignalSource`，读已经发布的 `gtSignal(从自己指向它的方向)`，两块贴在一起也不会把分数取整掉。都不是的话，读 `level.getSignal(neighborPos, dir) * UNIT`，原版红石也能当输入。
 - **双缓冲**：信号线和元件谁先 tick 不确定。元件在自己的 tick 里算出新值，到 tick 末尾再发布给 `gtSignal`。这样每个元件固定延迟 1 tick，结果和放置顺序无关。
 - **溢出**：两个接近满值的信号直接相乘会超出 `long`，要用 `Math.multiplyHigh` 或先缩放再乘。
 - `side` 按 `Direction.ordinal()`：0 下、1 上、2 北、3 南、4 西、5 东，是从信号线指向本方块的方向。
