@@ -9,8 +9,9 @@ import net.minecraft.core.Direction;
 final class PlateOutput {
     private PlateOutput() {}
 
-    static void digital(SignalBlockEntity entity, boolean on, Direction... quiet) {
-        FaceSignals.send(entity.output(), on ? FaceSignals.ON : 0L, quiet);
+    /** On or off, sent only away from {@code facing}. {@code facing} points at the measured block. */
+    static void away(SignalBlockEntity entity, boolean on, Direction facing) {
+        FaceSignals.onlyToward(entity.output(), on ? FaceSignals.ON : 0L, facing.getOpposite());
         BlockFeedback.setPowered(entity, LogicPlateBlock.POWERED, on);
     }
 

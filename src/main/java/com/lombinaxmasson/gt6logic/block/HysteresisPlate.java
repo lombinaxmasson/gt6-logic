@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Faces the thing it measures. Every other face is on or off. Changing preset keeps the remembered bit. */
+/** Faces the thing it measures. Only the opposite face is on or off. Changing preset keeps the remembered bit. */
 public abstract class HysteresisPlate extends SignalBlockEntity {
     private static final String PRESET = "Preset";
     private static final String ON = "On";
@@ -64,7 +64,7 @@ public abstract class HysteresisPlate extends SignalBlockEntity {
         if (before != now) {
             setChanged();
         }
-        PlateOutput.digital(this, now, facing);
+        PlateOutput.away(this, now, facing);
     }
 
     @Override

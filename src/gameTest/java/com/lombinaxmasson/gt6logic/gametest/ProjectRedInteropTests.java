@@ -10,18 +10,11 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
@@ -219,23 +212,12 @@ public final class ProjectRedInteropTests {
         helper.getLevel().setBlockAndUpdate(above.below(), Blocks.STONE.defaultBlockState());
     }
 
-    /** Uses the item on {@code face} of {@code target}, by a player looking toward {@code facing}. */
+    /** Uses the item on {@code face} of {@code target}, by a player looking toward {@code facing}. Pitch stays 45. */
     static void placePart(GameTestHelper helper, String id, BlockPos target, Direction face, Direction facing) {
         ResourceLocation key = ResourceLocation.parse(id);
         helper.assertTrue(BuiltInRegistries.ITEM.containsKey(key), "missing item " + id);
         Item item = BuiltInRegistries.ITEM.get(key);
-        ItemStack stack = new ItemStack(item);
-        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
-        BlockPos stand = target.relative(face).relative(facing.getOpposite(), 2);
-        player.moveTo(Vec3.atBottomCenterOf(stand), facing.toYRot(), 45);
-        player.setYHeadRot(facing.toYRot());
-        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
-        Vec3 hit = Vec3.atCenterOf(target).add(Vec3.atLowerCornerOf(face.getNormal()).scale(0.5));
-        UseOnContext context = new UseOnContext(helper.getLevel(), player, InteractionHand.MAIN_HAND, stack,
-                new BlockHitResult(hit, face, target, false));
-        InteractionResult result = stack.useOn(context);
-        helper.assertTrue(result.consumesAction(), "placing " + id + " returned " + result);
-        helper.assertTrue(!helper.getLevel().getBlockState(target.relative(face)).isAir(), id + " is in the world");
+        GameTestSupport.placeItem(helper, new ItemStack(item), target, face, facing, 45F);
     }
 
     private static boolean lit(GameTestHelper helper, BlockPos lamp) {

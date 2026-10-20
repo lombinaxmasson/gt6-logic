@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Inlet is the face opposite facing. Outlet is facing.
- * The signal is the strongest of the four side faces, so the pipes stay on the axis.
+ * The signal is only the left side of the outlet, so one wire is the input.
  */
 public class FlowBlockEntity extends PoweredEntity {
     static final long BUFFER = 256;
@@ -57,7 +57,8 @@ public class FlowBlockEntity extends PoweredEntity {
             return;
         }
         Direction outlet = state.getValue(ActuatorBlock.FACING);
-        long signal = NeighborSignals.strongest(level, worldPosition, NeighborSignals.around(outlet));
+        Direction input = NeighborSignals.leftOf(outlet);
+        long signal = NeighborSignals.strongest(level, worldPosition, input);
         int wanted = FlowRate.millibuckets(signal, kind.fullRate, kind.proportional);
         if (wanted > 0 && kind.needsPower && eu().consumeUpTo(1L) < 1L) {
             lastRate = 0;

@@ -19,6 +19,15 @@ public final class FaceSignals {
         return towardNeighbor.getOpposite().ordinal();
     }
 
+    /** Publishes {@code value} only for the neighbor standing in {@code towardNeighbor}. */
+    public static void onlyToward(PublishedSignal output, long value, Direction towardNeighbor) {
+        int open = sideReadBy(towardNeighbor);
+        long clamped = GtSignalCarrier.clamp(value);
+        for (int side = 0; side < PublishedSignal.FACES; side++) {
+            output.set(side, side == open ? clamped : 0L);
+        }
+    }
+
     /** Publishes {@code value} on every face except the faces those input neighbors read. */
     public static void send(PublishedSignal output, long value, Direction... inputs) {
         boolean[] quiet = new boolean[PublishedSignal.FACES];

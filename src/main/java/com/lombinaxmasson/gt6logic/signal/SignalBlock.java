@@ -1,5 +1,7 @@
 package com.lombinaxmasson.gt6logic.signal;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -27,12 +29,29 @@ public abstract class SignalBlock extends Block implements EntityBlock {
 
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        return vanillaLevel(level, pos, direction);
+        return vanillaOnFace(state, level, pos, direction);
     }
 
     @Override
     protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        return vanillaLevel(level, pos, direction);
+        return vanillaOnFace(state, level, pos, direction);
+    }
+
+    /**
+     * Direction from the output neighbor toward this block.
+     * Null keeps every published face, which is what the continuous modules still do.
+     */
+    protected @Nullable Direction redstoneQuery(BlockState state) {
+        return null;
+    }
+
+    @Override
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+        Direction face = redstoneQuery(state);
+        if (face == null) {
+            return super.canConnectRedstone(state, level, pos, direction);
+        }
+        return direction == face;
     }
 
     /**
@@ -44,6 +63,14 @@ public abstract class SignalBlock extends Block implements EntityBlock {
             return null;
         }
         return (tickLevel, pos, state, entity) -> ((SignalBlockEntity) entity).finishTick();
+    }
+
+    private int vanillaOnFace(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        Direction face = redstoneQuery(state);
+        if (face != null && direction != face) {
+            return 0;
+        }
+        return vanillaLevel(level, pos, direction);
     }
 
     private static int vanillaLevel(BlockGetter level, BlockPos pos, Direction direction) {

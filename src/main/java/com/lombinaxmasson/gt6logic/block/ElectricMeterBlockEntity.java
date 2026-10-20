@@ -7,12 +7,13 @@ import com.lombinaxmasson.gt6logic.signal.SignalBlockEntity;
 import com.lombinaxmasson.gt6logic.signal.SignalLevels;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** A small EU buffer in the line. Every face publishes how full that buffer is. */
+/** A small EU buffer in the line. EU still enters and leaves every face. The charge signal leaves only opposite facing. */
 public final class ElectricMeterBlockEntity extends SignalBlockEntity implements EuPort {
     public static final long CAPACITY = 10_240L;
     private static final String ENERGY = "Energy";
@@ -51,9 +52,8 @@ public final class ElectricMeterBlockEntity extends SignalBlockEntity implements
     @Override
     protected void onTick() {
         long signal = TenThousandths.toSignal(TenThousandths.of(power.stored(), power.capacity()));
-        for (int side = 0; side < 6; side++) {
-            output().set(side, signal);
-        }
+        Direction facing = getBlockState().getValue(ElectricMeterBlock.FACING);
+        FaceSignals.onlyToward(output(), signal, facing.getOpposite());
         BlockFeedback.setPowered(this, ElectricMeterBlock.POWERED, SignalLevels.ceilingLevel(signal) >= 1);
     }
 

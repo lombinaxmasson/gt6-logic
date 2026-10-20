@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Listens to the face it points at. Full signal draws one LV packet per tick
+ * Listens only to the face it points at. Full signal draws one LV packet per tick
  * and offers that much heat or cold for a neighbor to pull.
  */
 public class ThermalBlockEntity extends PoweredEntity {

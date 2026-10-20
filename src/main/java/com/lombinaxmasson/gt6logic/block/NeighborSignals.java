@@ -18,15 +18,14 @@ public final class NeighborSignals {
         return best;
     }
 
-    /** The four faces that are not on {@code axis}. */
-    public static Direction[] around(Direction axis) {
-        Direction[] faces = new Direction[4];
-        int count = 0;
-        for (Direction face : Direction.values()) {
-            if (face.getAxis() != axis.getAxis()) {
-                faces[count++] = face;
-            }
+    /**
+     * Left side when looking along {@code facing}.
+     * Up and down have no left; those use north so the read still has one face.
+     */
+    public static Direction leftOf(Direction facing) {
+        if (facing.getAxis() == Direction.Axis.Y) {
+            return Direction.NORTH;
         }
-        return faces;
+        return facing.getCounterClockWise();
     }
 }

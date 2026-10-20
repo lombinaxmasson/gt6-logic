@@ -4,6 +4,7 @@ import com.gregtech.gregtech.api.addon.platform.AddonTools;
 import com.lombinaxmasson.gt6logic.Gt6Logic;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -42,6 +43,12 @@ public final class BatteryStewardBlock extends LogicPlateBlock {
     @Override
     protected BlockEntityType<?> entityType() {
         return TYPE.get();
+    }
+
+    /** A neighbor on the free side looks back along {@code FACING}. */
+    @Override
+    protected Direction redstoneQuery(BlockState state) {
+        return state.getValue(FACING);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.lombinaxmasson.gt6logic.Gt6Logic;
 import com.lombinaxmasson.gt6logic.signal.SignalBlock;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -21,14 +23,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
-/** Sits in an EU line and publishes how full its own buffer is. */
+/** Sits in an EU line. EU uses every face. The charge signal leaves only the face opposite facing. */
 public final class ElectricMeterBlock extends SignalBlock {
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public static final DeferredBlock<ElectricMeterBlock> BLOCK = Gt6Logic.BLOCKS.register("electric_meter",
@@ -50,12 +54,23 @@ public final class ElectricMeterBlock extends SignalBlock {
 
     public ElectricMeterBlock(Properties properties) {
         super(properties);
-        registerDefaultState(defaultBlockState().setValue(POWERED, false));
+        registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) {
-        builder.add(POWERED);
+        builder.add(FACING, POWERED);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
+    }
+
+    /** The output neighbor stands opposite facing and looks back along {@code FACING}. */
+    @Override
+    protected Direction redstoneQuery(BlockState state) {
+        return state.getValue(FACING);
     }
 
     @Override

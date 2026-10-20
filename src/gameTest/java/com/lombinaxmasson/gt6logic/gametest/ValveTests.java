@@ -16,10 +16,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -28,7 +28,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
-/** The valve pulls from the west tank and pushes into the east tank. The signal sits on the north side. */
+/** The valve pulls from the west tank and pushes into the east tank. The signal sits on the left, which is north. */
 @GameTestHolder("gt6logic")
 @PrefixGameTestTemplate(false)
 public final class ValveTests {
@@ -67,8 +67,7 @@ public final class ValveTests {
     @GameTest(template = "test_empty", timeoutTicks = 20)
     public static void controlValveFollowsHalfASignal(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(new BlockPos(3, 1, 5));
-        BlockState state = ControlValveBlock.BLOCK.get().defaultBlockState().setValue(ActuatorBlock.FACING, Direction.EAST);
-        helper.getLevel().setBlockAndUpdate(pos, state);
+        placeActuator(helper, ControlValveBlock.ITEM.get(), pos, Direction.EAST);
         Ends ends = tanks(helper, pos);
         ends.inlet.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
         var probe = GameTestSupport.placeProbe(helper, pos.north());
@@ -87,10 +86,7 @@ public final class ValveTests {
     @GameTest(template = "test_empty", timeoutTicks = 20)
     public static void pumpMovesABucketPerTick(GameTestHelper helper) {
         BlockPos pos = helper.absolutePos(new BlockPos(3, 1, 8));
-        BlockState state = AdjustablePumpBlock.BLOCK.get()
-                .defaultBlockState()
-                .setValue(ActuatorBlock.FACING, Direction.EAST);
-        helper.getLevel().setBlockAndUpdate(pos, state);
+        placeActuator(helper, AdjustablePumpBlock.ITEM.get(), pos, Direction.EAST);
         Ends ends = tanks(helper, pos);
         ends.inlet.fill(new FluidStack(Fluids.WATER, 8_000), IFluidHandler.FluidAction.EXECUTE);
         var probe = GameTestSupport.placeProbe(helper, pos.north());
@@ -104,6 +100,23 @@ public final class ValveTests {
             helper.assertTrue(pump.lastRate() == 1000, "full signal asks for 1000 mB");
             helper.assertTrue(amount > 0 && amount % 1000 == 0, "the pump moved buckets, saw " + amount);
             helper.assertTrue(stored(ends.inlet) + amount == 8_000, "the inlet lost the same amount");
+            helper.succeed();
+        });
+    }
+
+    /** Powered, but the only signal is on the right. The left side stays quiet, so the valve stays shut. */
+    @GameTest(template = "test_empty", timeoutTicks = 20)
+    public static void electricValveIgnoresTheRightSide(GameTestHelper helper) {
+        BlockPos pos = helper.absolutePos(new BlockPos(3, 1, 14));
+        ElectricValveBlockEntity valve = placeValve(helper, pos);
+        Ends ends = tanks(helper, pos);
+        ends.inlet.fill(new FluidStack(Fluids.WATER, 4_000), IFluidHandler.FluidAction.EXECUTE);
+        var probe = GameTestSupport.placeProbe(helper, pos.south());
+        probe.setPending(Direction.SOUTH, FaceSignals.ON);
+        probe.finishTick();
+        valve.doEnergyInjection(EuStore.EU, Direction.UP, EuStore.LV, 8L, false);
+        helper.runAtTickTime(8, () -> {
+            helper.assertTrue(stored(ends.outlet) == 0, "a signal on the right leaves the valve shut");
             helper.succeed();
         });
     }
@@ -139,20 +152,23 @@ public final class ValveTests {
     }
 
     private static ElectricValveBlockEntity placeValve(GameTestHelper helper, BlockPos pos) {
-        BlockState state = ElectricValveBlock.BLOCK.get().defaultBlockState().setValue(ActuatorBlock.FACING, Direction.EAST);
-        helper.getLevel().setBlockAndUpdate(pos, state);
+        placeActuator(helper, ElectricValveBlock.ITEM.get(), pos, Direction.EAST);
         BlockEntity entity = helper.getLevel().getBlockEntity(pos);
         helper.assertTrue(entity instanceof ElectricValveBlockEntity, "electric valve");
         return (ElectricValveBlockEntity) entity;
     }
 
-    /** Inlet on the west, outlet on the east. Both are tanks. The actuator keeps none of the fluid. */
+    private static void placeActuator(GameTestHelper helper, Item item, BlockPos pos, Direction facing) {
+        GameTestSupport.placeAimed(helper, item, pos, facing);
+        helper.assertTrue(helper.getLevel().getBlockState(pos).getValue(ActuatorBlock.FACING) == facing,
+                item + " faces " + facing + " but is " + helper.getLevel().getBlockState(pos));
+    }
+
+    /** Inlet on the west, outlet on the east. Both are tanks, placed by clicking the actuator. */
     private static Ends tanks(GameTestHelper helper, BlockPos machine) {
         Level level = helper.getLevel();
-        BlockPos inletPos = machine.west();
-        BlockPos outletPos = machine.east();
-        level.setBlockAndUpdate(inletPos, TankBlock.BLOCK.get().defaultBlockState());
-        level.setBlockAndUpdate(outletPos, TankBlock.BLOCK.get().defaultBlockState());
+        BlockPos inletPos = GameTestSupport.placeBlock(helper, TankBlock.ITEM.get(), machine, Direction.WEST, Direction.NORTH);
+        BlockPos outletPos = GameTestSupport.placeBlock(helper, TankBlock.ITEM.get(), machine, Direction.EAST, Direction.NORTH);
         helper.assertTrue(level.getBlockState(inletPos).is(TankBlock.BLOCK.get()), "the inlet is a tank");
         helper.assertTrue(level.getBlockState(outletPos).is(TankBlock.BLOCK.get()), "the outlet is a tank");
         IFluidHandler inlet = FluidUtil.getFluidHandler(level, inletPos, Direction.EAST).orElse(null);
