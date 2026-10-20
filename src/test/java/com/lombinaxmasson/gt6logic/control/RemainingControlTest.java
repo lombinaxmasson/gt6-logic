@@ -124,14 +124,6 @@ class RemainingControlTest {
     }
 
     @Test
-    void kitchenTimerResumesItsPhase() {
-        KitchenTimer timer = KitchenTimer.resumed(5, 2, 2);
-        assertFalse(timer.output());
-        assertEquals(2, timer.phase());
-        assertTrue(KitchenTimer.resumed(5, 2, 0).output());
-    }
-
-    @Test
     void rememberedHysteresisSurvivesAReloadShape() {
         HysteresisSwitch hysteresis = new HysteresisSwitch(Mode.HEAT, 20, 80);
         hysteresis.remember(true);

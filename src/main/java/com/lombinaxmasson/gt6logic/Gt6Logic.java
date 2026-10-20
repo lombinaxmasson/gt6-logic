@@ -7,35 +7,23 @@ import com.gregtech.gregtech.api.addon.GregTechAddons;
 import com.lombinaxmasson.gt6logic.block.AdjustableCoolerBlock;
 import com.lombinaxmasson.gt6logic.block.AdjustableHeaterBlock;
 import com.lombinaxmasson.gt6logic.block.AdjustablePumpBlock;
-import com.lombinaxmasson.gt6logic.block.AlarmBellBlock;
 import com.lombinaxmasson.gt6logic.block.ArithmeticBlock;
 import com.lombinaxmasson.gt6logic.block.BatteryStewardBlock;
-import com.lombinaxmasson.gt6logic.block.BigLeverBlock;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlock;
 import com.lombinaxmasson.gt6logic.block.CompensationRepeaterBlock;
-import com.lombinaxmasson.gt6logic.block.ConsolePanelBlock;
 import com.lombinaxmasson.gt6logic.block.ControlValveBlock;
-import com.lombinaxmasson.gt6logic.block.CounterBlock;
-import com.lombinaxmasson.gt6logic.block.DelayRelayBlock;
 import com.lombinaxmasson.gt6logic.block.DigitDisplayBlock;
 import com.lombinaxmasson.gt6logic.block.ElectricMeterBlock;
 import com.lombinaxmasson.gt6logic.block.ElectricValveBlock;
-import com.lombinaxmasson.gt6logic.block.EmergencyStopBlock;
 import com.lombinaxmasson.gt6logic.block.FloatSwitchBlock;
 import com.lombinaxmasson.gt6logic.block.FormulaModuleBlock;
-import com.lombinaxmasson.gt6logic.block.IndicatorBlock;
-import com.lombinaxmasson.gt6logic.block.InterlockBlock;
-import com.lombinaxmasson.gt6logic.block.KitchenTimerBlock;
-import com.lombinaxmasson.gt6logic.block.LabeledButtonBlock;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.ProgramThermostatBlock;
 import com.lombinaxmasson.gt6logic.block.ProportionalControllerBlock;
 import com.lombinaxmasson.gt6logic.block.RatioControllerBlock;
-import com.lombinaxmasson.gt6logic.block.SelectorSwitchBlock;
 import com.lombinaxmasson.gt6logic.block.SignalMeterBlock;
 import com.lombinaxmasson.gt6logic.block.TankBlock;
 import com.lombinaxmasson.gt6logic.block.ThermostatBlock;
-import com.lombinaxmasson.gt6logic.block.WarningBeaconBlock;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.Registries;
@@ -72,21 +60,14 @@ public final class Gt6Logic {
             CREATIVE_MODE_TABS.register("main", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.gt6logic"))
                     .withTabsBefore(CreativeModeTabs.REDSTONE_BLOCKS)
-                    .icon(() -> new ItemStack(IndicatorBlock.ITEM.get()))
+                    .icon(() -> new ItemStack(ElectricMeterBlock.ITEM.get()))
                     .displayItems((parameters, output) -> ITEMS.getEntries()
                             .forEach(item -> output.accept(item.get())))
                     .build());
 
     public Gt6Logic(IEventBus modEventBus, ModContainer modContainer) {
-        IndicatorBlock.bootstrap();
-        AlarmBellBlock.bootstrap();
-        DelayRelayBlock.bootstrap();
-        CounterBlock.bootstrap();
-        InterlockBlock.bootstrap();
         SignalMeterBlock.bootstrap();
         CompensationRepeaterBlock.bootstrap();
-        SelectorSwitchBlock.bootstrap();
-        KitchenTimerBlock.bootstrap();
         ArithmeticBlock.bootstrap();
         RatioControllerBlock.bootstrap();
         ProportionalControllerBlock.bootstrap();
@@ -105,11 +86,6 @@ public final class Gt6Logic {
         DigitDisplayBlock.bootstrap();
         PointerGaugeBlock.bootstrap();
         ChartRecorderBlock.bootstrap();
-        BigLeverBlock.bootstrap();
-        LabeledButtonBlock.bootstrap();
-        WarningBeaconBlock.bootstrap();
-        ConsolePanelBlock.bootstrap();
-        EmergencyStopBlock.bootstrap();
         BLOCKS.register(modEventBus);
         ITEMS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);

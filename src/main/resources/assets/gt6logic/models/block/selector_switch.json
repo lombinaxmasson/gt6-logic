@@ -1,6 +1,0 @@
-{
-  "parent": "gt6logic:block/plate_plain",
-  "textures": {
-    "front": "gt6logic:block/selector_switch"
-  }
-}

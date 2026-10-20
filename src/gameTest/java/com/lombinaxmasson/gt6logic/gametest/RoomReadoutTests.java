@@ -5,17 +5,13 @@ import com.gregtech.gregtech.api.signal.GtSignalReceiver;
 import com.gregtech.gregtech.api.signal.GtSignalSource;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlock;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlockEntity;
-import com.lombinaxmasson.gt6logic.block.ConsolePanelBlock;
-import com.lombinaxmasson.gt6logic.block.ConsolePanelBlockEntity;
 import com.lombinaxmasson.gt6logic.block.DigitDisplayBlock;
 import com.lombinaxmasson.gt6logic.block.DigitDisplayBlockEntity;
 import com.lombinaxmasson.gt6logic.block.FaceSignals;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlockEntity;
 import com.lombinaxmasson.gt6logic.block.ReceiverPlate;
-import com.lombinaxmasson.gt6logic.block.WarningBeaconBlock;
 import com.lombinaxmasson.gt6logic.control.DisplayReading.Unit;
-import com.lombinaxmasson.gt6logic.control.PanelName;
 import com.lombinaxmasson.gt6logic.control.PointerAngle;
 import com.lombinaxmasson.gt6logic.gametest.SignalProbe.Entity;
 
@@ -133,98 +129,6 @@ public final class RoomReadoutTests {
         });
     }
 
-    @GameTest(template = "test_empty", timeoutTicks = 40)
-    public static void beaconBandsTheStrongestNeighbor(GameTestHelper helper) {
-        BlockPos beaconPos = helper.absolutePos(new BlockPos(2, 1, 2));
-        BlockPos neighborPos = beaconPos.west();
-        placeBeacon(helper, beaconPos);
-        helper.getLevel().setBlockAndUpdate(neighborPos, Blocks.REDSTONE_BLOCK.defaultBlockState());
-        helper.runAtTickTime(4, () -> {
-            assertBand(helper, beaconPos, WarningBeaconBlock.Color.RED, 15);
-            helper.getLevel().setBlockAndUpdate(neighborPos, Blocks.AIR.defaultBlockState());
-            Entity probe = GameTestSupport.placeProbe(helper, neighborPos);
-            probe.setPending(Direction.WEST, GtSignalCarrier.UNIT / 2);
-            probe.finishTick();
-        });
-        helper.runAtTickTime(8, () -> {
-            assertBand(helper, beaconPos, WarningBeaconBlock.Color.GREEN, 8);
-            Entity probe = (Entity) helper.getLevel().getBlockEntity(neighborPos);
-            probe.setPending(Direction.WEST, 6L * GtSignalCarrier.UNIT);
-            probe.finishTick();
-        });
-        helper.runAtTickTime(12, () -> {
-            assertBand(helper, beaconPos, WarningBeaconBlock.Color.YELLOW, 12);
-            Entity east = GameTestSupport.placeProbe(helper, beaconPos.east());
-            east.setPending(Direction.EAST, 12L * GtSignalCarrier.UNIT);
-            east.finishTick();
-        });
-        helper.runAtTickTime(16, () -> {
-            assertBand(helper, beaconPos, WarningBeaconBlock.Color.RED, 15);
-            Entity west = (Entity) helper.getLevel().getBlockEntity(neighborPos);
-            west.setPending(Direction.WEST, 0L);
-            west.finishTick();
-            Entity east = (Entity) helper.getLevel().getBlockEntity(beaconPos.east());
-            east.setPending(Direction.EAST, 0L);
-            east.finishTick();
-        });
-        helper.runAtTickTime(20, () -> {
-            assertBand(helper, beaconPos, WarningBeaconBlock.Color.OFF, 0);
-            helper.succeed();
-        });
-    }
-
-    @GameTest(template = "test_empty", timeoutTicks = 40)
-    public static void beaconDoesNotFeedTheWire(GameTestHelper helper) {
-        BlockPos stonePos = helper.absolutePos(new BlockPos(2, 1, 2));
-        BlockPos torchPos = stonePos.above();
-        BlockPos beaconPos = torchPos.above();
-        BlockPos wirePos = beaconPos.east();
-        helper.getLevel().setBlockAndUpdate(stonePos, Blocks.STONE.defaultBlockState());
-        helper.getLevel().setBlockAndUpdate(torchPos, Blocks.REDSTONE_TORCH.defaultBlockState());
-        placeBeacon(helper, beaconPos);
-        helper.getLevel().setBlockAndUpdate(wirePos,
-                SignalProbe.connect(SignalProbe.redAlloyWire().defaultBlockState(), Direction.WEST));
-        helper.runAtTickTime(4, () -> {
-            BlockState state = helper.getLevel().getBlockState(beaconPos);
-            helper.assertTrue(helper.getLevel().getSignal(beaconPos, Direction.UP) == 15,
-                    "the beacon conducts the torch under it");
-            helper.assertTrue(state.getSignal(helper.getLevel(), beaconPos, Direction.UP) == 0,
-                    "the beacon does not override getSignal");
-            helper.assertTrue(GameTestSupport.wire(helper, wirePos) == 0L, "the wire skips the beacon");
-            helper.succeed();
-        });
-    }
-
-    @GameTest(template = "test_empty", timeoutTicks = 40)
-    public static void consoleNamesTheLamp(GameTestHelper helper) {
-        BlockPos relative = new BlockPos(2, 1, 2);
-        BlockPos panelPos = helper.absolutePos(relative);
-        placePanel(helper, panelPos, Direction.WEST);
-        Entity probe = GameTestSupport.placeProbe(helper, panelPos.west());
-        probe.setPending(Direction.WEST, GtSignalCarrier.UNIT / 2);
-        probe.finishTick();
-        helper.runAtTickTime(4, () -> {
-            ConsolePanelBlockEntity panel = panel(helper, panelPos);
-            helper.assertTrue(panel.getBlockState().getValue(ConsolePanelBlock.POWERED), "half a level lights the panel");
-            helper.assertTrue(panel.name() == PanelName.POWER, "a new panel says power");
-            helper.useBlock(relative);
-            helper.assertTrue(panel(helper, panelPos).name() == PanelName.HEAT, "right click selects heat");
-            helper.assertTrue(panel(helper, panelPos).getBlockState().getValue(ConsolePanelBlock.POWERED),
-                    "renaming leaves the lamp on");
-            probe.setPending(Direction.WEST, 0L);
-            probe.finishTick();
-        });
-        helper.runAtTickTime(8, () -> {
-            helper.assertTrue(!panel(helper, panelPos).getBlockState().getValue(ConsolePanelBlock.POWERED),
-                    "zero turns the lamp off");
-            CompoundTag saved = panel(helper, panelPos).saveWithoutMetadata(helper.getLevel().registryAccess());
-            saved.putString("Name", "nope");
-            panel(helper, panelPos).loadWithComponents(saved, helper.getLevel().registryAccess());
-            helper.assertTrue(panel(helper, panelPos).name() == PanelName.POWER, "an unknown name returns to power");
-            helper.succeed();
-        });
-    }
-
     private static void placeDisplay(GameTestHelper helper, BlockPos pos, Direction facing) {
         BlockState state = DigitDisplayBlock.BLOCK.get().defaultBlockState().setValue(ReceiverPlate.FACING, facing);
         helper.getLevel().setBlockAndUpdate(pos, state);
@@ -263,33 +167,5 @@ public final class RoomReadoutTests {
         BlockEntity entity = helper.getLevel().getBlockEntity(pos);
         helper.assertTrue(entity instanceof ChartRecorderBlockEntity, "chart recorder block entity");
         return (ChartRecorderBlockEntity) entity;
-    }
-
-    private static void placeBeacon(GameTestHelper helper, BlockPos pos) {
-        helper.getLevel().setBlockAndUpdate(pos, WarningBeaconBlock.BLOCK.get().defaultBlockState());
-        BlockEntity entity = helper.getLevel().getBlockEntity(pos);
-        helper.assertTrue(entity instanceof GtSignalReceiver, "warning beacon is a receiver");
-        helper.assertTrue(!(entity instanceof GtSignalSource), "warning beacon is not a source");
-        helper.assertTrue(helper.getLevel().getBlockState(pos).getValue(WarningBeaconBlock.BAND) == WarningBeaconBlock.Color.OFF,
-                "a new beacon is dark");
-    }
-
-    private static void assertBand(GameTestHelper helper, BlockPos pos, WarningBeaconBlock.Color color, int light) {
-        BlockState state = helper.getLevel().getBlockState(pos);
-        helper.assertTrue(state.getValue(WarningBeaconBlock.BAND) == color, "band " + color + ", saw " + state.getValue(WarningBeaconBlock.BAND));
-        helper.assertTrue(state.getLightEmission() == light, "light " + light + ", saw " + state.getLightEmission());
-    }
-
-    private static void placePanel(GameTestHelper helper, BlockPos pos, Direction facing) {
-        helper.getLevel().setBlockAndUpdate(pos,
-                ConsolePanelBlock.BLOCK.get().defaultBlockState().setValue(ReceiverPlate.FACING, facing));
-        helper.assertTrue(helper.getLevel().getBlockEntity(pos) instanceof GtSignalReceiver, "console panel is a receiver");
-        helper.assertTrue(!(helper.getLevel().getBlockEntity(pos) instanceof GtSignalSource), "console panel is not a source");
-    }
-
-    private static ConsolePanelBlockEntity panel(GameTestHelper helper, BlockPos pos) {
-        BlockEntity entity = helper.getLevel().getBlockEntity(pos);
-        helper.assertTrue(entity instanceof ConsolePanelBlockEntity, "console panel block entity");
-        return (ConsolePanelBlockEntity) entity;
     }
 }

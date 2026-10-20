@@ -1,7 +1,0 @@
-{
-  "parent": "gt6logic:block/plate",
-  "textures": {
-    "front": "gt6logic:block/labeled_button",
-    "lamp": "gt6logic:block/lamp_off"
-  }
-}

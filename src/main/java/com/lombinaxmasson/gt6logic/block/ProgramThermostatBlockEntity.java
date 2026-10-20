@@ -1,7 +1,6 @@
 package com.lombinaxmasson.gt6logic.block;
 
 import com.lombinaxmasson.gt6logic.control.HysteresisSwitch.Mode;
-import com.lombinaxmasson.gt6logic.control.KitchenTimer;
 import com.lombinaxmasson.gt6logic.control.ProportionalControl;
 import com.lombinaxmasson.gt6logic.control.TemperatureSchedule;
 import com.lombinaxmasson.gt6logic.control.Temperatures;
@@ -71,7 +70,7 @@ public final class ProgramThermostatBlockEntity extends SignalBlockEntity {
         int limit = TemperatureSchedule.SEGMENT_TICKS * TemperatureSchedule.CELSIUS.length;
         if (elapsed < limit) {
             elapsed++;
-            if (elapsed % KitchenTimer.TICKS_PER_SECOND == 0) {
+            if (elapsed % 20 == 0) {
                 setChanged();
             }
         }

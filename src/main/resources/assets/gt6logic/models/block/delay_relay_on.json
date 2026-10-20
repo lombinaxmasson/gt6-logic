@@ -1,7 +1,0 @@
-{
-  "parent": "gt6logic:block/plate",
-  "textures": {
-    "front": "gt6logic:block/delay_relay",
-    "lamp": "gt6logic:block/lamp_on"
-  }
-}
