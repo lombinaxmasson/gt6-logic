@@ -75,11 +75,17 @@ class RemainingControlTest {
         assertEquals(UNIT, Formula.evaluate("min(a, b)", 4 * UNIT, UNIT).signal());
         assertEquals(0L, Formula.evaluate("max(a - b, 0)", UNIT, 4 * UNIT).signal());
         assertEquals(FULL, Formula.evaluate("clamp(a * 2, 0, 15)", 8 * UNIT, 0L).signal());
+        assertEquals(5 * UNIT, Formula.evaluate(Formula.PRESETS[0], 6 * UNIT, 2 * UNIT).signal());
+        assertEquals(2 * UNIT, Formula.evaluate(Formula.PRESETS[1], 6 * UNIT, 2 * UNIT).signal());
+        assertEquals(4 * UNIT, Formula.evaluate(Formula.PRESETS[2], 6 * UNIT, 2 * UNIT).signal());
+        assertEquals(12 * UNIT, Formula.evaluate(Formula.PRESETS[3], 6 * UNIT, 2 * UNIT).signal());
+        assertEquals(4, Formula.PRESETS.length);
         assertEquals(-UNIT, Formula.evaluate("a - b", UNIT, 2 * UNIT).signal());
         assertFalse(Formula.evaluate("nope", UNIT, UNIT).ok());
         assertFalse(Formula.evaluate("a / ", UNIT, UNIT).ok());
         assertEquals(0, Formula.nextPreset("not a preset"));
         assertEquals(1, Formula.nextPreset(Formula.PRESETS[0]));
+        assertEquals(0, Formula.nextPreset(Formula.PRESETS[3]));
     }
 
     @Test

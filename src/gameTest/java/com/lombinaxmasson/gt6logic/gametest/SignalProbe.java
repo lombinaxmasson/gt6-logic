@@ -1,8 +1,11 @@
 package com.lombinaxmasson.gt6logic.gametest;
 
+import java.util.OptionalLong;
+
 import com.gregtech.gregtech.api.signal.GtSignalCarrier;
 import com.gregtech.gregtech.api.signal.GtSignalReceiver;
 import com.lombinaxmasson.gt6logic.Gt6Logic;
+import com.lombinaxmasson.gt6logic.heat.TemperatureSource;
 import com.lombinaxmasson.gt6logic.signal.SignalBlock;
 import com.lombinaxmasson.gt6logic.signal.SignalBlockEntity;
 
@@ -61,8 +64,10 @@ public final class SignalProbe {
         }
     }
 
-    public static final class Entity extends SignalBlockEntity {
+    public static final class Entity extends SignalBlockEntity implements TemperatureSource {
         private boolean echoInputs;
+        /** Empty means "this face is not a probe", so readers fall back to the signal. */
+        private OptionalLong reportedMilli = OptionalLong.empty();
 
         Entity(BlockPos pos, BlockState state) {
             super(TYPE, pos, state);
@@ -70,6 +75,20 @@ public final class SignalProbe {
 
         public void setPending(Direction side, long value) {
             output().set(side.ordinal(), value);
+        }
+
+        /** Milli-celsius. A present value wins over the temperature encoded on the wire. */
+        public void reportMilliCelsius(long milliCelsius) {
+            reportedMilli = OptionalLong.of(milliCelsius);
+        }
+
+        public void clearMilliCelsius() {
+            reportedMilli = OptionalLong.empty();
+        }
+
+        @Override
+        public OptionalLong milliCelsius(Direction touchedFace) {
+            return reportedMilli;
         }
 
         public void echoInputs(boolean echo) {

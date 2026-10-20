@@ -10,6 +10,7 @@ import com.lombinaxmasson.gt6logic.block.ProportionalControllerBlock;
 import com.lombinaxmasson.gt6logic.block.ProportionalControllerBlockEntity;
 import com.lombinaxmasson.gt6logic.block.RatioControllerBlock;
 import com.lombinaxmasson.gt6logic.block.RatioControllerBlockEntity;
+import com.lombinaxmasson.gt6logic.control.Formula;
 import com.lombinaxmasson.gt6logic.control.TemperatureSchedule;
 import com.lombinaxmasson.gt6logic.control.Temperatures;
 import com.lombinaxmasson.gt6logic.signal.SignalBlockEntity;
@@ -86,18 +87,51 @@ public final class SignalMathTests {
         });
     }
 
-    @GameTest(template = "test_empty", timeoutTicks = 20)
-    public static void formulaHalvesThenRejectsABadLine(GameTestHelper helper) {
-        BlockPos pos = place(helper, new BlockPos(2, 1, 11), FormulaModuleBlock.BLOCK.get());
+    @GameTest(template = "test_empty", timeoutTicks = 40)
+    public static void formulaCyclesTheFourPresets(GameTestHelper helper) {
+        BlockPos relative = new BlockPos(2, 1, 11);
+        BlockPos pos = place(helper, relative, FormulaModuleBlock.BLOCK.get());
         var front = GameTestSupport.placeProbe(helper, pos.west());
-        front.setPending(Direction.WEST, 4L * GtSignalCarrier.UNIT);
+        var back = GameTestSupport.placeProbe(helper, pos.east());
+        front.setPending(Direction.WEST, 6L * GtSignalCarrier.UNIT);
+        back.setPending(Direction.EAST, 2L * GtSignalCarrier.UNIT);
         front.finishTick();
+        back.finishTick();
+        long five = 5L * GtSignalCarrier.UNIT;
         helper.runAtTickTime(4, () -> {
-            helper.assertTrue(north(helper, pos) == 2L * GtSignalCarrier.UNIT, "half of four levels");
-            formula(helper, pos).setFormula("nope");
+            helper.assertTrue(formula(helper, pos).formula().equals(Formula.PRESETS[0]), "the first preset is the half-sum");
+            helper.assertTrue(north(helper, pos) == five, "clamp(a * 0.5 + b, 0, 15) is five levels");
+            helper.assertTrue(GameTestSupport.toward(source(helper, pos), Direction.WEST) == 0L, "the front stays quiet");
+            helper.assertTrue(GameTestSupport.toward(source(helper, pos), Direction.EAST) == 0L, "the back stays quiet");
+            helper.useBlock(relative);
         });
         helper.runAtTickTime(8, () -> {
-            helper.assertTrue(north(helper, pos) == 0L, "a line that does not parse stays at zero");
+            helper.assertTrue(formula(helper, pos).formula().equals(Formula.PRESETS[1]), "the second preset is min");
+            helper.assertTrue(north(helper, pos) == 2L * GtSignalCarrier.UNIT, "min(a, b) is two levels");
+            helper.useBlock(relative);
+        });
+        helper.runAtTickTime(12, () -> {
+            helper.assertTrue(formula(helper, pos).formula().equals(Formula.PRESETS[2]), "the third preset keeps a positive difference");
+            helper.assertTrue(north(helper, pos) == 4L * GtSignalCarrier.UNIT, "max(a - b, 0) is four levels");
+            helper.useBlock(relative);
+        });
+        helper.runAtTickTime(16, () -> {
+            helper.assertTrue(formula(helper, pos).formula().equals(Formula.PRESETS[3]), "the fourth preset doubles");
+            helper.assertTrue(north(helper, pos) == 12L * GtSignalCarrier.UNIT, "clamp(a * 2, 0, 15) is twelve levels");
+            helper.useBlock(relative);
+        });
+        helper.runAtTickTime(20, () -> {
+            helper.assertTrue(formula(helper, pos).formula().equals(Formula.PRESETS[0]), "the next click returns to the first line");
+            helper.assertTrue(north(helper, pos) == five, "the first line is publishing again");
+            formula(helper, pos).setFormula("nope");
+        });
+        helper.runAtTickTime(24, () -> {
+            helper.assertTrue(north(helper, pos) == 0L, "a stored line that does not parse outputs zero");
+            helper.useBlock(relative);
+        });
+        helper.runAtTickTime(28, () -> {
+            helper.assertTrue(formula(helper, pos).formula().equals(Formula.PRESETS[0]), "a line outside the four presets snaps back");
+            helper.assertTrue(north(helper, pos) == five, "right click does not keep the foreign line");
             helper.succeed();
         });
     }
