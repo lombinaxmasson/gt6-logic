@@ -109,6 +109,8 @@ dependencies {
     // Recipe viewer and block overlay for runClient only. localRuntime keeps them out of the published jar.
     localRuntime "maven.modrinth:emi:${emi_version}"
     localRuntime "maven.modrinth:jade:${jade_version}"
+    // ProjectRed and its libraries, fetched by fetch-projectred.ps1. Absent jars are simply left out.
+    localRuntime fileTree(dir: 'libs/projectred', include: '*.jar')
 
     // The SDK is the only GregTech compile dependency, so internals stay invisible.
     // The full mod jar is the dev and test runtime. Neither jar is packaged into this one.

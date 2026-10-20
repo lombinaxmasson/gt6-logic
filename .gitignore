@@ -40,6 +40,7 @@ run/
 repo/
 !**/src/**/repo/
 libs/gt6ce/*.jar
+libs/projectred/*.jar
 
 ### Local notes ###
 交接说明.md

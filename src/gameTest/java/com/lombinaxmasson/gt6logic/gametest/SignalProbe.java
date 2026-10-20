@@ -123,6 +123,15 @@ public final class SignalProbe {
         throw new IllegalStateException("no " + side.getSerializedName() + " port on " + state);
     }
 
+    public static boolean connected(BlockState state, Direction side) {
+        for (Property<?> property : state.getProperties()) {
+            if (property instanceof BooleanProperty flag && property.getName().equals(side.getSerializedName())) {
+                return state.getValue(flag);
+            }
+        }
+        throw new IllegalStateException("no " + side.getSerializedName() + " port on " + state);
+    }
+
     public static boolean isReceiver(BlockEntity entity) {
         return entity instanceof GtSignalReceiver;
     }

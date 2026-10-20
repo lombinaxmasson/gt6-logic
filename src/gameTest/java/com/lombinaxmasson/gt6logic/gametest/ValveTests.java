@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -103,6 +104,36 @@ public final class ValveTests {
             helper.assertTrue(pump.lastRate() == 1000, "full signal asks for 1000 mB");
             helper.assertTrue(amount > 0 && amount % 1000 == 0, "the pump moved buckets, saw " + amount);
             helper.assertTrue(stored(ends.inlet) + amount == 8_000, "the inlet lost the same amount");
+            helper.succeed();
+        });
+    }
+
+    /** A ProjectRed NOT gate north of the valve, front toward it. Skipped without ProjectRed. */
+    @GameTest(template = "test_empty", timeoutTicks = 60, required = false)
+    public static void projectRedGateDrivesElectricValve(GameTestHelper helper) {
+        if (!ProjectRedInteropTests.present()) {
+            helper.succeed();
+            return;
+        }
+        BlockPos pos = helper.absolutePos(new BlockPos(3, 1, 11));
+        ElectricValveBlockEntity valve = placeValve(helper, pos);
+        Ends ends = tanks(helper, pos);
+        ends.inlet.fill(new FluidStack(Fluids.WATER, 8_000), IFluidHandler.FluidAction.EXECUTE);
+        BlockPos gate = pos.north();
+        helper.getLevel().setBlockAndUpdate(gate.below(), Blocks.STONE.defaultBlockState());
+        ProjectRedInteropTests.placePart(helper, "projectred_integration:not_gate", gate.below(), Direction.UP, Direction.SOUTH);
+        helper.runAtTickTime(5, () -> valve.doEnergyInjection(EuStore.EU, Direction.UP, EuStore.LV, 8L, false));
+        helper.runAtTickTime(10, () -> {
+            helper.assertTrue(stored(ends.outlet) > 0, "the gate's output opens the valve");
+            helper.getLevel().setBlockAndUpdate(gate.north(), Blocks.REDSTONE_BLOCK.defaultBlockState());
+        });
+        int[] moved = {0};
+        helper.runAtTickTime(16, () -> {
+            moved[0] = stored(ends.outlet);
+            valve.doEnergyInjection(EuStore.EU, Direction.UP, EuStore.LV, 8L, false);
+        });
+        helper.runAtTickTime(22, () -> {
+            helper.assertTrue(stored(ends.outlet) == moved[0], "the gate turned off and the valve shut");
             helper.succeed();
         });
     }
