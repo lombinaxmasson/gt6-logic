@@ -51,7 +51,9 @@ public abstract class SignalBlock extends Block implements EntityBlock {
         if (face == null) {
             return super.canConnectRedstone(state, level, pos, direction);
         }
-        return direction == face;
+        // Dust asks for the facing. ProjectRed asks for the opposite, the side the wire stands on.
+        // Those two directions are the mounting axis. The other four faces stay disconnected.
+        return direction == face || direction == face.getOpposite();
     }
 
     /**

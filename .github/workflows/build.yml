@@ -104,5 +104,29 @@ jobs:
             echo "::warning::GT6CE jar built from $GT6CE_COMMIT differs from the recorded checksum."
           fi
 
+      # Same Modrinth version ids as fetch-projectred.ps1. The jars stay out of git.
+      - name: Fetch ProjectRed
+        run: |
+          set -euo pipefail
+          mkdir -p libs/projectred
+          mapfile -t ids < <(sed -n "s/.*'\([A-Za-z0-9]\{8\}\)'.*/\1/p" fetch-projectred.ps1)
+          if [ "${#ids[@]}" -ne 5 ]; then
+            echo "Expected 5 ProjectRed version ids in fetch-projectred.ps1, found ${#ids[@]}"
+            exit 1
+          fi
+          for id in "${ids[@]}"; do
+            meta=$(curl -fsSL "https://api.modrinth.com/v2/version/${id}")
+            read -r url name sha < <(jq -r '
+              (.files[] | select(.primary == true)), .files[0]
+              | [.url, .filename, .hashes.sha1] | @tsv
+            ' <<<"$meta" | head -n 1)
+            curl -fsSL "$url" -o "libs/projectred/${name}"
+            echo "${sha}  libs/projectred/${name}" | sha1sum -c -
+            echo "$name"
+          done
+
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Run GameTests
+        run: ./gradlew runGameTestServer

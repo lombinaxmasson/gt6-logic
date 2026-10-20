@@ -20,6 +20,7 @@ GT6CE 的 NeoForge 1.21.1 附属：一批友好的控制元件（恒温器、浮
 - 需要 JDK 21。使用 Gradle 前把 `JAVA_HOME` 指向 JDK 21。
 - 编译只依赖 GT6CE 的附属 SDK `gregtech6-addon-sdk-1.21.1-neoforge-0.7.0.jar`。`runClient`、`runServer` 和 GameTest 使用完整的 `gregtech6-1.21.1-neoforge.jar`。两个 jar 都不进 git，也不打进成品。
 - 运行 `update-gt.ps1` 从 GT6CE 的 NeoForge CI 产物下载这两个 jar（需要已登录的 `gh`）。下载后更新 `libs/gt6ce/build-commit.txt` 和 `gregtech6-1.21.1-neoforge.jar.sha256`。
+- 运行 `fetch-projectred.ps1` 从 Modrinth 下载 ProjectRed 4.23.0 和它声明的库到 `libs/projectred/`。这些 jar 不进 git，也不打进成品。成品把 ProjectRed 写成必需依赖，没装时游戏拒绝加载。
 - CI 会按 `build-commit.txt` 钉住的 GT6CE 提交自己构建 mod jar 和 SDK，所以这个提交必须已经合并进 SaltNya/GregTech6，并且能产出 NeoForge SDK。
 - 常用命令：`gradlew build`、`gradlew runClient`、`gradlew runGameTestServer`。
 

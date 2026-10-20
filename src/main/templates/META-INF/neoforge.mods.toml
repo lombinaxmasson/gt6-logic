@@ -11,7 +11,7 @@ displayName="${mod_name}"
 displayURL="https://github.com/lombinaxmasson/gt6-logic"
 authors="lombinaxmasson"
 description='''
-Friendly control blocks and process machines for GT6CE: thermostats, float switches, timers, valves, and the machines that need them.
+Sensors, valves, and continuous controls for GT6CE. Switch logic runs on ProjectRed; this mod connects GT machines and GT signal wire to those circuits.
 '''
 
 [[dependencies.${mod_id}]]
@@ -33,4 +33,25 @@ Friendly control blocks and process machines for GT6CE: thermostats, float switc
     type="required"
     versionRange="[0.7,)"
     ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="projectred_core"
+    type="required"
+    versionRange="[4.23,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="projectred_integration"
+    type="required"
+    versionRange="[4.23,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="projectred_transmission"
+    type="required"
+    versionRange="[4.23,)"
+    ordering="NONE"
     side="BOTH"

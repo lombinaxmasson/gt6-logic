@@ -264,7 +264,7 @@ public final class FloatAndHeatTests {
         return GameTestSupport.placeBlock(helper, Items.REDSTONE, pos.below(), Direction.UP, Direction.NORTH);
     }
 
-    /** The away face carries {@code expected}. The other five stay 0, and dust can attach only on the away face. */
+    /** The away face carries {@code expected}. The other five stay 0. Wires attach only on the facing axis. */
     private static void assertOneFace(GameTestHelper helper, BlockPos pos, long expected) {
         BlockState state = helper.getLevel().getBlockState(pos);
         Direction facing = state.getValue(BlockStateProperties.FACING);
@@ -281,8 +281,8 @@ public final class FloatAndHeatTests {
             int direct = state.getDirectSignal(helper.getLevel(), pos, query);
             int want = away ? vanilla : 0;
             helper.assertTrue(weak == want && direct == want, side + " vanilla " + weak + "/" + direct);
-            boolean connect = state.getBlock().canConnectRedstone(state, helper.getLevel(), pos, query);
-            helper.assertTrue(connect == away, side + " connect " + connect);
+            boolean connect = state.getBlock().canConnectRedstone(state, helper.getLevel(), pos, side);
+            helper.assertTrue(connect == (side.getAxis() == facing.getAxis()), side + " connect " + connect);
         }
         helper.assertTrue(!state.getBlock().canConnectRedstone(state, helper.getLevel(), pos, null),
                 "a wire above does not connect");

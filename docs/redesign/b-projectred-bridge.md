@@ -132,7 +132,7 @@ ProjectRed 已经有的，本模组删掉：
 
 ## 8. 构建
 
-- 开发运行用的五个 jar 由 `fetch-projectred.ps1` 从 Modrinth 下到 `libs/projectred/`，按 SHA1 校验，不进仓库。`build.gradle` 用 `localRuntime fileTree(...)` 引用，不打进成品。目录为空时（比如 CI）跟 ProjectRed 有关的 GameTest 直接跳过。
+- 开发运行用的五个 jar 由 `fetch-projectred.ps1` 从 Modrinth 下到 `libs/projectred/`，按 SHA1 校验，不进仓库。`build.gradle` 用 `localRuntime fileTree(...)` 引用，不打进成品。CI 按脚本里的同一组版本 id 下载并校验，再构建、再跑 GameTest。目录为空时 `gradlew build` 仍通过；启动游戏会因必需依赖拒绝加载。
   - 不走 Gradle 的 maven：covers1624 maven 上找不到 1.21.1 的 ProjectRed 坐标；Modrinth maven 从 Gradle 连接时 TLS 握手被断开，PowerShell 直接下载正常。
 - 版本钉在 ProjectRed 4.23.0 在 Modrinth 上声明的那一组：ProjectRed core、integration、transmission 4.23.0，CB Multipart 3.5.0.155，CodeChicken Lib 4.6.1.529。
 - 编译依赖等第 2 步做捆绑线缆接口时再加。到时要找能用的 ProjectRed 接口包来源；1.21.1 是官方映射，不需要 `fg.deobf` 那类转换。

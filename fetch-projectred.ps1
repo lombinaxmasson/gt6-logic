@@ -1,5 +1,6 @@
 # Download ProjectRed 4.23.0 for 1.21.1 NeoForge and the library versions it declares, into libs\projectred\
 # Dev and GameTest runtime only. The values are Modrinth version ids.
+# CI reads these single-quoted ids from this file. Keep each id on its own line.
 $versions = @(
     'RueNBgM9', # ProjectRed core 4.23.0
     'iM7enYpN', # ProjectRed integration 4.23.0
