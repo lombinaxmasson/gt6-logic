@@ -1,8 +1,12 @@
 package com.lombinaxmasson.gt6logic.block;
 
+import com.gregtech.gregtech.api.addon.platform.AddonTools;
+
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,6 +21,17 @@ final class BlockFeedback {
         if (player instanceof ServerPlayer serverPlayer && serverPlayer.connection != null) {
             serverPlayer.displayClientMessage(message, true);
         }
+    }
+
+    /** Magnifying glass reads. Any other item keeps its own use action. */
+    static ItemInteractionResult glass(ItemStack stack, Level level, Player player, Component message) {
+        if (!AddonTools.isMagnifyingGlass(stack)) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+        if (!level.isClientSide) {
+            tell(player, message);
+        }
+        return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
     /** Sends the block entity's update tag. The chunk packet is built from {@code getUpdateTag}. */

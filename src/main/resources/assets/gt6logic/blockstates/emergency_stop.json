@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "gt6logic:block/emergency_stop"
+    },
+    "powered=true": {
+      "model": "gt6logic:block/emergency_stop_on"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=down,powered=false": {
+      "model": "gt6logic:block/labeled_button",
+      "x": 90
+    },
+    "facing=down,powered=true": {
+      "model": "gt6logic:block/labeled_button_on",
+      "x": 90
+    },
+    "facing=up,powered=false": {
+      "model": "gt6logic:block/labeled_button",
+      "x": 270
+    },
+    "facing=up,powered=true": {
+      "model": "gt6logic:block/labeled_button_on",
+      "x": 270
+    },
+    "facing=north,powered=false": {
+      "model": "gt6logic:block/labeled_button"
+    },
+    "facing=north,powered=true": {
+      "model": "gt6logic:block/labeled_button_on"
+    },
+    "facing=south,powered=false": {
+      "model": "gt6logic:block/labeled_button",
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "gt6logic:block/labeled_button_on",
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "gt6logic:block/labeled_button",
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "gt6logic:block/labeled_button_on",
+      "y": 270
+    },
+    "facing=east,powered=false": {
+      "model": "gt6logic:block/labeled_button",
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "gt6logic:block/labeled_button_on",
+      "y": 90
+    }
+  }
+}
