@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 
-/** One bar per stored sample, oldest at the left. Empty samples leave a gap. */
+/** One bar per stored sample, oldest at the left. The samples come from the free face. */
 public final class ChartRecorderRenderer implements BlockEntityRenderer<ChartRecorderBlockEntity> {
     private static final ResourceLocation MARK =
             ResourceLocation.fromNamespaceAndPath(Gt6Logic.MODID, "textures/block/needle.png");

@@ -8,14 +8,13 @@ import com.lombinaxmasson.gt6logic.heat.TemperatureInputs;
 import com.lombinaxmasson.gt6logic.signal.SignalBlockEntity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Front reads temperature. The mash curve sets the target, and the opening follows the error. */
+/** Left reads temperature. The front carries the opening. The mash curve sets the target. */
 public final class ProgramThermostatBlockEntity extends SignalBlockEntity {
     private static final String MODE = "Mode";
     private static final String ELAPSED = "Elapsed";
@@ -60,13 +59,13 @@ public final class ProgramThermostatBlockEntity extends SignalBlockEntity {
             return;
         }
         BlockState state = getBlockState();
-        if (!state.hasProperty(LogicPlateBlock.FACING)) {
+        if (!state.hasProperty(AnalogPlate.SUPPORT)) {
             return;
         }
-        Direction facing = state.getValue(LogicPlateBlock.FACING);
-        long measured = Temperatures.toSignal(TemperatureInputs.milli(level, worldPosition, facing));
+        GatePorts.Sides ports = AnalogPlate.ports(state);
+        long measured = Temperatures.toSignal(TemperatureInputs.milli(level, worldPosition, ports.left()));
         long target = Temperatures.toSignal(setpointMilli());
-        PlateOutput.value(this, ProportionalControl.opening(mode, measured, target, 1), facing);
+        AnalogPlate.publish(this, ProportionalControl.opening(mode, measured, target, 1), ports.front());
         int limit = TemperatureSchedule.SEGMENT_TICKS * TemperatureSchedule.CELSIUS.length;
         if (elapsed < limit) {
             elapsed++;

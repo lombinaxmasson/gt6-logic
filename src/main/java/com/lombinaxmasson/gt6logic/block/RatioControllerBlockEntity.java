@@ -6,14 +6,13 @@ import com.lombinaxmasson.gt6logic.control.RatioControl.Ratio;
 import com.lombinaxmasson.gt6logic.signal.SignalBlockEntity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Front is the reference. The result is what the second line should carry. */
+/** Back is the reference. The front carries the scaled result. */
 public final class RatioControllerBlockEntity extends SignalBlockEntity {
     private static final String PRESET = "Preset";
 
@@ -39,12 +38,11 @@ public final class RatioControllerBlockEntity extends SignalBlockEntity {
     @Override
     protected void onTick() {
         BlockState state = getBlockState();
-        if (!state.hasProperty(LogicPlateBlock.FACING)) {
+        if (!state.hasProperty(AnalogPlate.SUPPORT)) {
             return;
         }
-        Direction facing = state.getValue(LogicPlateBlock.FACING);
-        long value = RatioControl.desired(read(facing), ratio());
-        PlateOutput.value(this, value, facing, facing.getOpposite());
+        GatePorts.Sides ports = AnalogPlate.ports(state);
+        AnalogPlate.publish(this, RatioControl.desired(read(ports.back()), ratio()), ports.front());
     }
 
     @Override

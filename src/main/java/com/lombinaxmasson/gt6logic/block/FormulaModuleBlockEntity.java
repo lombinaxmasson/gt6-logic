@@ -6,14 +6,13 @@ import com.lombinaxmasson.gt6logic.control.Formula.Value;
 import com.lombinaxmasson.gt6logic.signal.SignalBlockEntity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Front is {@code a}, back is {@code b}. The line is one of the built-in formulas. */
+/** Left is {@code a}, right is {@code b}. The back port is present; the built-in lines do not read it. */
 public final class FormulaModuleBlockEntity extends SignalBlockEntity {
     private static final String LINE = "Formula";
 
@@ -47,13 +46,13 @@ public final class FormulaModuleBlockEntity extends SignalBlockEntity {
     @Override
     protected void onTick() {
         BlockState state = getBlockState();
-        if (!state.hasProperty(LogicPlateBlock.FACING)) {
+        if (!state.hasProperty(AnalogPlate.SUPPORT)) {
             return;
         }
-        Direction facing = state.getValue(LogicPlateBlock.FACING);
-        Value value = Formula.evaluate(formula, read(facing), read(facing.getOpposite()));
+        GatePorts.Sides ports = AnalogPlate.ports(state);
+        Value value = Formula.evaluate(formula, read(ports.left()), read(ports.right()));
         long signal = value.ok() ? GtSignalCarrier.clamp(value.signal()) : 0L;
-        PlateOutput.value(this, signal, facing, facing.getOpposite());
+        AnalogPlate.publish(this, signal, ports.front());
     }
 
     @Override

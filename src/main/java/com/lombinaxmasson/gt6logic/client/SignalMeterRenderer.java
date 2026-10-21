@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-/** Draws the four-decimal level on the room side of the plate. */
+/** Draws the four-decimal level on the free face. Facing is the wall. */
 public final class SignalMeterRenderer implements BlockEntityRenderer<SignalMeterBlockEntity> {
     private final Font font;
 

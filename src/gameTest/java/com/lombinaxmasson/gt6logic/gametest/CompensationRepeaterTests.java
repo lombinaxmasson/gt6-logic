@@ -11,9 +11,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.RedstoneSide;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -30,22 +33,57 @@ public final class CompensationRepeaterTests {
         BlockPos repeaterPos = wirePos.east();
         helper.getLevel().setBlockAndUpdate(redstonePos, Blocks.REDSTONE_BLOCK.defaultBlockState());
         GameTestSupport.placeWire(helper, wirePos, Direction.WEST);
-        place(helper, repeaterPos, Direction.WEST);
+        place(helper, repeaterPos, Direction.EAST);
+        BlockPos dustPos = repeaterPos.east();
+        BlockPos sidePos = repeaterPos.north();
+        helper.getLevel().setBlockAndUpdate(dustPos.below(), Blocks.STONE.defaultBlockState());
+        helper.getLevel().setBlockAndUpdate(sidePos.below(), Blocks.STONE.defaultBlockState());
+        GameTestSupport.placeBlock(helper, Items.REDSTONE, dustPos.below(), Direction.UP, Direction.NORTH);
+        GameTestSupport.placeBlock(helper, Items.REDSTONE, sidePos.below(), Direction.UP, Direction.NORTH);
         helper.runAtTickTime(6, () -> {
             CompensationRepeaterBlockEntity repeater = repeater(helper, repeaterPos);
-            helper.assertTrue(GameTestSupport.toward(repeater, Direction.EAST) == 15L * GtSignalCarrier.UNIT,
-                    "the full level is back, saw " + GameTestSupport.toward(repeater, Direction.EAST));
-            helper.assertTrue(GameTestSupport.toward(repeater, Direction.WEST) == 0L, "the input face stays quiet");
+            for (Direction side : Direction.values()) {
+                long want = side == Direction.EAST ? 15L * GtSignalCarrier.UNIT : 0L;
+                long read = GameTestSupport.toward(repeater, side);
+                helper.assertTrue(read == want, side + " is " + read);
+            }
+            BlockState state = repeater.getBlockState();
+            for (Direction query : Direction.values()) {
+                boolean connect = state.getBlock().canConnectRedstone(state, helper.getLevel(), repeaterPos, query);
+                helper.assertTrue(connect == (query == Direction.WEST), query + " connect " + connect);
+            }
+            helper.assertTrue(!state.getBlock().canConnectRedstone(state, helper.getLevel(), repeaterPos, null),
+                    "a wire above does not connect");
+            BlockState dust = helper.getLevel().getBlockState(dustPos);
+            BlockState side = helper.getLevel().getBlockState(sidePos);
+            helper.assertTrue(dust.getValue(RedStoneWireBlock.WEST) != RedstoneSide.NONE, "dust connects on the output, " + dust);
+            helper.assertTrue(dust.getValue(RedStoneWireBlock.POWER) == 15, "output dust is on, " + dust);
+            // A line into the repeater would drop the east and west arms. A dot keeps the cross.
+            helper.assertTrue(side.getValue(RedStoneWireBlock.EAST) == RedstoneSide.SIDE
+                    && side.getValue(RedStoneWireBlock.WEST) == RedstoneSide.SIDE
+                    && side.getValue(RedStoneWireBlock.POWER) == 0,
+                    "side dust stays off the repeater, " + side);
             helper.assertTrue(repeater.getBlockState().getValue(CompensationRepeaterBlock.POWERED), "the face lights");
             helper.succeed();
         });
+    }
+
+    @GameTest(template = "test_empty", timeoutTicks = 20)
+    public static void playerPlacesTheOutputAwayFromTheClickedBlock(GameTestHelper helper) {
+        BlockPos anchor = helper.absolutePos(new BlockPos(2, 1, 11));
+        helper.getLevel().setBlockAndUpdate(anchor, Blocks.STONE.defaultBlockState());
+        BlockPos placed = GameTestSupport.placeBlock(
+                helper, CompensationRepeaterBlock.ITEM.get(), anchor, Direction.EAST, Direction.EAST);
+        helper.assertTrue(helper.getLevel().getBlockState(placed).getValue(CompensationRepeaterBlock.FACING) == Direction.EAST,
+                "output continues east, away from the clicked block");
+        helper.succeed();
     }
 
     @GameTest(template = "test_empty", timeoutTicks = 40)
     public static void zeroStaysZeroAndRangeSixtyFourAddsASmallerHop(GameTestHelper helper) {
         BlockPos relative = new BlockPos(2, 1, 5);
         BlockPos repeaterPos = helper.absolutePos(relative);
-        place(helper, repeaterPos, Direction.WEST);
+        place(helper, repeaterPos, Direction.EAST);
         var probe = GameTestSupport.placeProbe(helper, repeaterPos.west());
         probe.setPending(Direction.WEST, 0);
         probe.finishTick();

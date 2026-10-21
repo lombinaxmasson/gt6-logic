@@ -46,8 +46,8 @@ public final class SignalMeterBlockEntity extends BlockEntity implements GtSigna
         if (!state.is(SignalMeterBlock.BLOCK.get())) {
             return;
         }
-        Direction facing = state.getValue(SignalMeterBlock.FACING);
-        long next = SignalInputs.read(level, worldPosition.relative(facing), facing);
+        Direction free = state.getValue(SignalMeterBlock.FACING).getOpposite();
+        long next = SignalInputs.read(level, worldPosition.relative(free), free);
         if (next == reading) {
             return;
         }

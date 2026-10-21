@@ -39,7 +39,7 @@ public abstract class SignalBlock extends Block implements EntityBlock {
 
     /**
      * Direction from the output neighbor toward this block.
-     * Null keeps every published face, which is what the continuous modules still do.
+     * Null keeps vanilla redstone on every published face.
      */
     protected @Nullable Direction redstoneQuery(BlockState state) {
         return null;

@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import com.gregtech.gregtech.api.addon.platform.AddonTools;
 import com.gregtech.gregtech.api.signal.GtSignalCarrier;
 import com.gregtech.gregtech.api.signal.GtSignalSource;
+import com.lombinaxmasson.gt6logic.block.AnalogPlate;
 import com.lombinaxmasson.gt6logic.gametest.SignalProbe.Entity;
 
 import net.minecraft.core.BlockPos;
@@ -94,6 +95,21 @@ public final class GameTestSupport {
     /** Places a block item. Pitch stays 0 so an aimed block's facing stays on the horizontal. */
     public static BlockPos placeBlock(GameTestHelper helper, Item item, BlockPos target, Direction face, Direction look) {
         return placeItem(helper, new ItemStack(item), target, face, look, 0F);
+    }
+
+    /**
+     * Floor plate on the stone under {@code pos}. The player looks {@code front}, and the plate's front follows.
+     */
+    public static BlockPos placeGate(GameTestHelper helper, Item item, BlockPos pos, Direction front) {
+        BlockPos support = pos.below();
+        helper.getLevel().setBlockAndUpdate(support, Blocks.STONE.defaultBlockState());
+        BlockPos placed = placeBlock(helper, item, support, Direction.UP, front);
+        helper.assertTrue(placed.equals(pos), item + " landed at " + placed + " instead of " + pos);
+        BlockState state = helper.getLevel().getBlockState(pos);
+        helper.assertTrue(state.getValue(AnalogPlate.SUPPORT) == Direction.DOWN, "the plate sits on the floor");
+        helper.assertTrue(AnalogPlate.ports(state).front() == front,
+                "front follows the look, saw " + AnalogPlate.ports(state).front());
+        return placed;
     }
 
     /** Full block on the stone under {@code pos}. The player looks opposite {@code facing}, so the block points {@code facing}. */

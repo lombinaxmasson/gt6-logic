@@ -8,6 +8,7 @@ import com.lombinaxmasson.gt6logic.block.AdjustableHeaterBlock;
 import com.lombinaxmasson.gt6logic.block.AdjustablePumpBlock;
 import com.lombinaxmasson.gt6logic.block.ArithmeticBlock;
 import com.lombinaxmasson.gt6logic.block.BatteryStewardBlock;
+import com.lombinaxmasson.gt6logic.block.BundledTapBlock;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlock;
 import com.lombinaxmasson.gt6logic.block.CompensationRepeaterBlock;
 import com.lombinaxmasson.gt6logic.block.ControlValveBlock;
@@ -16,6 +17,7 @@ import com.lombinaxmasson.gt6logic.block.ElectricMeterBlock;
 import com.lombinaxmasson.gt6logic.block.ElectricValveBlock;
 import com.lombinaxmasson.gt6logic.block.FloatSwitchBlock;
 import com.lombinaxmasson.gt6logic.block.FormulaModuleBlock;
+import com.lombinaxmasson.gt6logic.block.LevelGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.ProgramThermostatBlock;
 import com.lombinaxmasson.gt6logic.block.ProportionalControllerBlock;
@@ -67,6 +69,7 @@ public final class SecondTierTabTests {
         assertListed(helper, tab, SignalMeterBlock.BLOCK.get(), "block.gt6logic.signal_meter", "Signal Meter", "信号表");
         assertListed(helper, tab, CompensationRepeaterBlock.BLOCK.get(),
                 "block.gt6logic.compensation_repeater", "Compensation Repeater", "补偿中继器");
+        assertListed(helper, tab, BundledTapBlock.BLOCK.get(), "block.gt6logic.bundled_tap", "Bundled Tap", "捆绑线缆接口");
         assertListed(helper, tab, ArithmeticBlock.BLOCK.get(), "block.gt6logic.arithmetic", "Arithmetic Module", "算术模块");
         assertListed(helper, tab, RatioControllerBlock.BLOCK.get(), "block.gt6logic.ratio_controller", "Ratio Controller", "配比控制器");
         assertListed(helper, tab, ProportionalControllerBlock.BLOCK.get(),
@@ -78,6 +81,20 @@ public final class SecondTierTabTests {
         assertListed(helper, tab, ControlValveBlock.BLOCK.get(), "block.gt6logic.control_valve", "Control Valve", "调节阀");
         assertListed(helper, tab, AdjustablePumpBlock.BLOCK.get(), "block.gt6logic.adjustable_pump", "Adjustable Pump", "可调泵");
         assertListed(helper, tab, FloatSwitchBlock.BLOCK.get(), "block.gt6logic.float_switch", "Float Switch", "浮球开关");
+        assertListed(helper, tab, LevelGaugeBlock.BLOCK.get(), "block.gt6logic.level_gauge", "Level Gauge", "液位计");
+        int floatAt = -1;
+        int gaugeAt = -1;
+        int index = 0;
+        for (ItemStack stack : tab.getDisplayItems()) {
+            if (stack.is(FloatSwitchBlock.ITEM.get())) {
+                floatAt = index;
+            }
+            if (stack.is(LevelGaugeBlock.ITEM.get())) {
+                gaugeAt = index;
+            }
+            index++;
+        }
+        helper.assertTrue(gaugeAt == floatAt + 1, "level gauge follows the float switch, " + floatAt + " then " + gaugeAt);
         assertListed(helper, tab, AdjustableHeaterBlock.BLOCK.get(), "block.gt6logic.adjustable_heater", "Adjustable Heater", "可调加热器");
         assertListed(helper, tab, AdjustableCoolerBlock.BLOCK.get(), "block.gt6logic.adjustable_cooler", "Adjustable Cooler", "可调冷却器");
         assertListed(helper, tab, ThermostatBlock.BLOCK.get(), "block.gt6logic.thermostat", "Thermostat", "恒温器");

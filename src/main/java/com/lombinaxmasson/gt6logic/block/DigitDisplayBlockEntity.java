@@ -59,8 +59,8 @@ public final class DigitDisplayBlockEntity extends BlockEntity implements GtSign
         if (!state.is(DigitDisplayBlock.BLOCK.get())) {
             return;
         }
-        Direction facing = state.getValue(ReceiverPlate.FACING);
-        long next = SignalInputs.read(level, worldPosition.relative(facing), facing);
+        Direction free = state.getValue(ReceiverPlate.FACING).getOpposite();
+        long next = SignalInputs.read(level, worldPosition.relative(free), free);
         if (next == reading) {
             return;
         }

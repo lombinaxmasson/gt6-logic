@@ -39,7 +39,7 @@ public final class RoomReadoutTests {
     public static void digitCyclesUnitsAndKeepsTheFraction(GameTestHelper helper) {
         BlockPos relative = new BlockPos(2, 1, 2);
         BlockPos displayPos = helper.absolutePos(relative);
-        placeDisplay(helper, displayPos, Direction.WEST);
+        placeDisplay(helper, displayPos, Direction.EAST);
         Entity probe = GameTestSupport.placeProbe(helper, displayPos.west());
         probe.setPending(Direction.WEST, 3L * GtSignalCarrier.UNIT);
         probe.finishTick();
@@ -91,7 +91,7 @@ public final class RoomReadoutTests {
     @GameTest(template = "test_empty", timeoutTicks = 40)
     public static void pointerFollowsTheSignal(GameTestHelper helper) {
         BlockPos gaugePos = helper.absolutePos(new BlockPos(2, 1, 2));
-        placeGauge(helper, gaugePos, Direction.WEST);
+        placeGauge(helper, gaugePos, Direction.EAST);
         Entity probe = GameTestSupport.placeProbe(helper, gaugePos.west());
         probe.setPending(Direction.WEST, FaceSignals.ON);
         probe.finishTick();
@@ -108,7 +108,7 @@ public final class RoomReadoutTests {
     @GameTest(template = "test_empty", timeoutTicks = 80)
     public static void chartRemembersLowAndHigh(GameTestHelper helper) {
         BlockPos recorderPos = helper.absolutePos(new BlockPos(2, 1, 2));
-        placeRecorder(helper, recorderPos, Direction.WEST);
+        placeRecorder(helper, recorderPos, Direction.EAST);
         Entity probe = GameTestSupport.placeProbe(helper, recorderPos.west());
         probe.setPending(Direction.WEST, FaceSignals.ON);
         probe.finishTick();

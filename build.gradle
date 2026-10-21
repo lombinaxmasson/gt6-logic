@@ -110,7 +110,10 @@ dependencies {
     localRuntime "maven.modrinth:emi:${emi_version}"
     localRuntime "maven.modrinth:jade:${jade_version}"
     // ProjectRed and its libraries, fetched by fetch-projectred.ps1. Absent jars are simply left out.
-    localRuntime fileTree(dir: 'libs/projectred', include: '*.jar')
+    // The api jar is compileOnly only. Leaving it on the runtime classpath would load a second
+    // copy of IBundledTile and bundled cables would not recognise this mod's block entities.
+    localRuntime fileTree(dir: 'libs/projectred', include: '*.jar', exclude: '*-api.jar')
+    compileOnly files('libs/projectred/mrtjp.ProjectRed-1.21.1-4.23.0-api.jar')
 
     // The SDK is the only GregTech compile dependency, so internals stay invisible.
     // The full mod jar is the dev and test runtime. Neither jar is packaged into this one.
@@ -126,6 +129,9 @@ tasks.named('test', Test).configure {
     useJUnitPlatform()
 }
 
+configurations.named('testCompileClasspath') {
+    extendsFrom(configurations.modDevCompileDependencies)
+}
 configurations.named('testRuntimeClasspath') {
     extendsFrom(configurations.modDevRuntimeDependencies)
 }

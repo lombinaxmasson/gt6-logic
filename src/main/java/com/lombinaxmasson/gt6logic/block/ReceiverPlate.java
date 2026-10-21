@@ -1,5 +1,7 @@
 package com.lombinaxmasson.gt6logic.block;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -20,8 +22,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
- * A plate that only listens. It conducts, and the block entity is a receiver,
- * so a signal wire skips it instead of treating the conducted power as a source.
+ * A plate that only listens. Facing is the wall. The free face is the one that is read.
+ * It conducts, and the block entity is a receiver, so a signal wire skips it.
  */
 public abstract class ReceiverPlate extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
@@ -49,6 +51,21 @@ public abstract class ReceiverPlate extends Block implements EntityBlock {
     }
 
     protected void addProperties(StateDefinition.Builder<Block, BlockState> builder) {}
+
+    @Override
+    protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return 0;
+    }
+
+    @Override
+    protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return 0;
+    }
+
+    @Override
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+        return false;
+    }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {

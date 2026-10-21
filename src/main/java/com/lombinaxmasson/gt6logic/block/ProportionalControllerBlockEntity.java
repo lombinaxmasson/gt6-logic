@@ -5,14 +5,13 @@ import com.lombinaxmasson.gt6logic.control.ProportionalControl;
 import com.lombinaxmasson.gt6logic.signal.SignalBlockEntity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Front is the measurement, back is the setpoint. Cool is the default. */
+/** Left is the measurement, right is the setpoint. The front carries the opening. Cool is the default. */
 public final class ProportionalControllerBlockEntity extends SignalBlockEntity {
     private static final String MODE = "Mode";
     private static final String GAIN = "Gain";
@@ -49,12 +48,12 @@ public final class ProportionalControllerBlockEntity extends SignalBlockEntity {
     @Override
     protected void onTick() {
         BlockState state = getBlockState();
-        if (!state.hasProperty(LogicPlateBlock.FACING)) {
+        if (!state.hasProperty(AnalogPlate.SUPPORT)) {
             return;
         }
-        Direction facing = state.getValue(LogicPlateBlock.FACING);
-        long opening = ProportionalControl.opening(mode, read(facing), read(facing.getOpposite()), gain);
-        PlateOutput.value(this, opening, facing, facing.getOpposite());
+        GatePorts.Sides ports = AnalogPlate.ports(state);
+        long opening = ProportionalControl.opening(mode, read(ports.left()), read(ports.right()), gain);
+        AnalogPlate.publish(this, opening, ports.front());
     }
 
     @Override

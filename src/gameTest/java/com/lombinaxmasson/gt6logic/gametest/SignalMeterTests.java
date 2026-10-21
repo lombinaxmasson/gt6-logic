@@ -27,7 +27,7 @@ public final class SignalMeterTests {
     public static void halfLevelStaysFractional(GameTestHelper helper) {
         BlockPos meterPos = helper.absolutePos(new BlockPos(2, 1, 2));
         BlockPos probePos = meterPos.west();
-        place(helper, meterPos, Direction.WEST);
+        place(helper, meterPos, Direction.EAST);
         Entity probe = GameTestSupport.placeProbe(helper, probePos);
         probe.setPending(Direction.WEST, GtSignalCarrier.UNIT / 2);
         probe.finishTick();
@@ -52,7 +52,7 @@ public final class SignalMeterTests {
         BlockPos meterPos = wirePos.east();
         helper.getLevel().setBlockAndUpdate(redstonePos, Blocks.REDSTONE_BLOCK.defaultBlockState());
         GameTestSupport.placeWire(helper, wirePos, Direction.WEST);
-        place(helper, meterPos, Direction.WEST);
+        place(helper, meterPos, Direction.EAST);
         long expected = 15L * GtSignalCarrier.UNIT - GameTestSupport.RED_ALLOY_LOSS;
         helper.runAtTickTime(6, () -> {
             SignalMeterBlockEntity meter = meter(helper, meterPos);

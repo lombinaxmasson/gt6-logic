@@ -124,6 +124,14 @@ jobs:
             echo "${sha}  libs/projectred/${name}" | sha1sum -c -
             echo "$name"
           done
+          core=$(echo libs/projectred/ProjectRed-*-core.jar)
+          api_entry=$(unzip -Z1 "$core" | grep 'META-INF/jarjar/.*-api\.jar' | head -n 1)
+          if [ -z "$api_entry" ]; then
+            echo "ProjectRed core jar has no META-INF/jarjar api"
+            exit 1
+          fi
+          unzip -p "$core" "$api_entry" > "libs/projectred/$(basename "$api_entry")"
+          echo "$(basename "$api_entry")"
 
       - name: Build with Gradle
         run: ./gradlew build

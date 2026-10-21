@@ -22,7 +22,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 /** Right click changes the setting. The magnifying glass reads it back. */
-public final class ArithmeticBlock extends LogicPlateBlock {
+public final class ArithmeticBlock extends AnalogPlate {
     public static final DeferredBlock<ArithmeticBlock> BLOCK = Gt6Logic.BLOCKS.register("arithmetic",
             () -> new ArithmeticBlock(properties(MapColor.COLOR_YELLOW)));
 
@@ -36,7 +36,7 @@ public final class ArithmeticBlock extends LogicPlateBlock {
     public static void bootstrap() {}
 
     public ArithmeticBlock(Properties properties) {
-        super(properties);
+        super(properties, true, true, false);
     }
 
     @Override

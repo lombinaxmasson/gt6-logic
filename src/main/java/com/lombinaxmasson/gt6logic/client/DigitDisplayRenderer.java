@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 
-/** Draws the selected unit on the room side of the plate. */
+/** Draws the selected unit on the free face. Facing is the wall. */
 public final class DigitDisplayRenderer implements BlockEntityRenderer<DigitDisplayBlockEntity> {
     private final Font font;
 

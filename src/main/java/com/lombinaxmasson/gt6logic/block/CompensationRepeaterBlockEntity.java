@@ -43,9 +43,9 @@ public final class CompensationRepeaterBlockEntity extends SignalBlockEntity {
         if (!state.is(CompensationRepeaterBlock.BLOCK.get())) {
             return;
         }
-        Direction facing = state.getValue(CompensationRepeaterBlock.FACING);
-        long restored = HopCompensation.restore(read(facing), range);
-        FaceSignals.send(output(), restored, facing);
+        Direction output = state.getValue(CompensationRepeaterBlock.FACING);
+        long restored = HopCompensation.restore(read(output.getOpposite()), range);
+        FaceSignals.onlyToward(output(), restored, output);
         show(SignalLevels.ceilingLevel(restored) >= 1);
     }
 

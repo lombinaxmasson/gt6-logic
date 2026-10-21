@@ -6,7 +6,8 @@ import net.minecraft.core.Direction;
 
 /**
  * The same turn the blockstate applies to a model whose front is its south face
- * and whose plate is on its north side. Local +Z then points into the room.
+ * and whose plate is on its north side. {@code facing} is the wall.
+ * Local +Z then points into the room, which is the free face.
  */
 public final class PlateTurn {
     private PlateTurn() {}

@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 
-/** The same hand as the delay relay, swept by how full the facing signal is. */
+/** The hand is swept by the signal on the free face. Facing is the wall. */
 public final class PointerGaugeRenderer implements BlockEntityRenderer<PointerGaugeBlockEntity> {
     public PointerGaugeRenderer(BlockEntityRendererProvider.Context context) {}
 

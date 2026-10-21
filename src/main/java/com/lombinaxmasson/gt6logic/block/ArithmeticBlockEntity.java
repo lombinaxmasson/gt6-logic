@@ -5,14 +5,13 @@ import com.lombinaxmasson.gt6logic.control.Arithmetic.Op;
 import com.lombinaxmasson.gt6logic.signal.SignalBlockEntity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Front is the first number, back is the second. The other faces carry the result. */
+/** Left is the first number, right is the second. The front carries the result. */
 public final class ArithmeticBlockEntity extends SignalBlockEntity {
     private static final String OP = "Op";
 
@@ -38,12 +37,11 @@ public final class ArithmeticBlockEntity extends SignalBlockEntity {
     @Override
     protected void onTick() {
         BlockState state = getBlockState();
-        if (!state.hasProperty(LogicPlateBlock.FACING)) {
+        if (!state.hasProperty(AnalogPlate.SUPPORT)) {
             return;
         }
-        Direction facing = state.getValue(LogicPlateBlock.FACING);
-        long value = Arithmetic.apply(op, read(facing), read(facing.getOpposite()));
-        PlateOutput.value(this, value, facing, facing.getOpposite());
+        GatePorts.Sides ports = AnalogPlate.ports(state);
+        AnalogPlate.publish(this, Arithmetic.apply(op, read(ports.left()), read(ports.right())), ports.front());
     }
 
     @Override

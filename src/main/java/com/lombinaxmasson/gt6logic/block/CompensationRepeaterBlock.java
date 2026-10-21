@@ -1,5 +1,7 @@
 package com.lombinaxmasson.gt6logic.block;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.gregtech.gregtech.api.addon.platform.AddonTools;
 import com.lombinaxmasson.gt6logic.Gt6Logic;
 import com.lombinaxmasson.gt6logic.signal.SignalBlock;
@@ -35,7 +37,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
-/** Adds back one hop of wire loss. The front face is the input. */
+/** Adds back one hop of wire loss. Facing is the output. The opposite face is the input. */
 public final class CompensationRepeaterBlock extends SignalBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -93,9 +95,21 @@ public final class CompensationRepeaterBlock extends SignalBlock {
         builder.add(FACING, POWERED, SPAN);
     }
 
+    /** Output continues away from the clicked block. */
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(FACING, context.getClickedFace().getOpposite());
+        return defaultBlockState().setValue(FACING, context.getClickedFace());
+    }
+
+    /** Dust on the output face passes the opposite of facing. */
+    @Override
+    protected Direction redstoneQuery(BlockState state) {
+        return state.getValue(FACING).getOpposite();
+    }
+
+    @Override
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+        return direction != null && direction.equals(redstoneQuery(state));
     }
 
     @Override

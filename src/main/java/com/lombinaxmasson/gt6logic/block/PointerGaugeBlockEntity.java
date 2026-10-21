@@ -47,8 +47,8 @@ public final class PointerGaugeBlockEntity extends BlockEntity implements GtSign
         if (!state.is(PointerGaugeBlock.BLOCK.get())) {
             return;
         }
-        Direction facing = state.getValue(ReceiverPlate.FACING);
-        long next = SignalInputs.read(level, worldPosition.relative(facing), facing);
+        Direction free = state.getValue(ReceiverPlate.FACING).getOpposite();
+        long next = SignalInputs.read(level, worldPosition.relative(free), free);
         if (next == reading) {
             return;
         }

@@ -64,8 +64,8 @@ public final class ChartRecorderBlockEntity extends BlockEntity implements GtSig
         if (!state.is(ChartRecorderBlock.BLOCK.get())) {
             return;
         }
-        Direction facing = state.getValue(ReceiverPlate.FACING);
-        long signal = SignalInputs.read(level, worldPosition.relative(facing), facing);
+        Direction free = state.getValue(ReceiverPlate.FACING).getOpposite();
+        long signal = SignalInputs.read(level, worldPosition.relative(free), free);
         if (!trace.tick(signal)) {
             return;
         }

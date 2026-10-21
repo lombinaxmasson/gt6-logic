@@ -20,3 +20,17 @@ foreach ($id in $versions) {
     if ($actual -ne $file.hashes.sha1) { throw "Checksum mismatch for $($file.filename)" }
     Write-Host $file.filename
 }
+# The compile-only API is nested in the core jar. Runtime still uses the core mod's jar-in-jar copy.
+$core = Get-ChildItem $dir -Filter 'ProjectRed-*-core.jar' | Select-Object -First 1
+if (-not $core) { throw "ProjectRed core jar is missing from $dir" }
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$zip = [System.IO.Compression.ZipFile]::OpenRead($core.FullName)
+try {
+    $entry = $zip.Entries | Where-Object { $_.FullName -like 'META-INF/jarjar/*-api.jar' } | Select-Object -First 1
+    if (-not $entry) { throw "ProjectRed core jar has no META-INF/jarjar api" }
+    $api = Join-Path $dir ([System.IO.Path]::GetFileName($entry.FullName))
+    [System.IO.Compression.ZipFileExtensions]::ExtractToFile($entry, $api, $true)
+    Write-Host ([System.IO.Path]::GetFileName($api))
+} finally {
+    $zip.Dispose()
+}

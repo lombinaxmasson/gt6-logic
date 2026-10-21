@@ -22,7 +22,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 /** Right click changes the setting. The magnifying glass reads it back. */
-public final class FormulaModuleBlock extends LogicPlateBlock {
+public final class FormulaModuleBlock extends AnalogPlate {
     public static final DeferredBlock<FormulaModuleBlock> BLOCK = Gt6Logic.BLOCKS.register("formula_module",
             () -> new FormulaModuleBlock(properties(MapColor.COLOR_MAGENTA)));
 
@@ -36,7 +36,7 @@ public final class FormulaModuleBlock extends LogicPlateBlock {
     public static void bootstrap() {}
 
     public FormulaModuleBlock(Properties properties) {
-        super(properties);
+        super(properties, true, true, true);
     }
 
     @Override

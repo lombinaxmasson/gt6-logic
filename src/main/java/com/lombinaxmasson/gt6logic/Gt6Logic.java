@@ -9,6 +9,7 @@ import com.lombinaxmasson.gt6logic.block.AdjustableHeaterBlock;
 import com.lombinaxmasson.gt6logic.block.AdjustablePumpBlock;
 import com.lombinaxmasson.gt6logic.block.ArithmeticBlock;
 import com.lombinaxmasson.gt6logic.block.BatteryStewardBlock;
+import com.lombinaxmasson.gt6logic.block.BundledTapBlock;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlock;
 import com.lombinaxmasson.gt6logic.block.CompensationRepeaterBlock;
 import com.lombinaxmasson.gt6logic.block.ControlValveBlock;
@@ -17,6 +18,7 @@ import com.lombinaxmasson.gt6logic.block.ElectricMeterBlock;
 import com.lombinaxmasson.gt6logic.block.ElectricValveBlock;
 import com.lombinaxmasson.gt6logic.block.FloatSwitchBlock;
 import com.lombinaxmasson.gt6logic.block.FormulaModuleBlock;
+import com.lombinaxmasson.gt6logic.block.LevelGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.ProgramThermostatBlock;
 import com.lombinaxmasson.gt6logic.block.ProportionalControllerBlock;
@@ -68,6 +70,7 @@ public final class Gt6Logic {
     public Gt6Logic(IEventBus modEventBus, ModContainer modContainer) {
         SignalMeterBlock.bootstrap();
         CompensationRepeaterBlock.bootstrap();
+        BundledTapBlock.bootstrap();
         ArithmeticBlock.bootstrap();
         RatioControllerBlock.bootstrap();
         ProportionalControllerBlock.bootstrap();
@@ -78,6 +81,7 @@ public final class Gt6Logic {
         ControlValveBlock.bootstrap();
         AdjustablePumpBlock.bootstrap();
         FloatSwitchBlock.bootstrap();
+        LevelGaugeBlock.bootstrap();
         AdjustableHeaterBlock.bootstrap();
         AdjustableCoolerBlock.bootstrap();
         ThermostatBlock.bootstrap();

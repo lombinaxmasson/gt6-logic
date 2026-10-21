@@ -22,7 +22,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 /** Right click changes the setting. The magnifying glass reads it back. */
-public final class RatioControllerBlock extends LogicPlateBlock {
+public final class RatioControllerBlock extends AnalogPlate {
     public static final DeferredBlock<RatioControllerBlock> BLOCK = Gt6Logic.BLOCKS.register("ratio_controller",
             () -> new RatioControllerBlock(properties(MapColor.COLOR_GREEN)));
 
@@ -36,7 +36,7 @@ public final class RatioControllerBlock extends LogicPlateBlock {
     public static void bootstrap() {}
 
     public RatioControllerBlock(Properties properties) {
-        super(properties);
+        super(properties, false, false, true);
     }
 
     @Override

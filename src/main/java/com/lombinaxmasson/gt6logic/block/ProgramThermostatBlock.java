@@ -22,7 +22,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 /** Right click changes the setting. The magnifying glass reads it back. */
-public final class ProgramThermostatBlock extends LogicPlateBlock {
+public final class ProgramThermostatBlock extends AnalogPlate {
     public static final DeferredBlock<ProgramThermostatBlock> BLOCK = Gt6Logic.BLOCKS.register("program_thermostat",
             () -> new ProgramThermostatBlock(properties(MapColor.COLOR_PURPLE)));
 
@@ -36,7 +36,7 @@ public final class ProgramThermostatBlock extends LogicPlateBlock {
     public static void bootstrap() {}
 
     public ProgramThermostatBlock(Properties properties) {
-        super(properties);
+        super(properties, true, false, false);
     }
 
     @Override

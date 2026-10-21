@@ -1,5 +1,7 @@
 package com.lombinaxmasson.gt6logic.block;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.gregtech.gregtech.api.addon.platform.AddonTools;
 import com.lombinaxmasson.gt6logic.Gt6Logic;
 
@@ -34,8 +36,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 /**
- * Shows the neighbor it faces. It does not override {@code getSignal}. The block entity is only a
- * receiver, so a signal wire skips the meter instead of treating it as a source.
+ * Facing is the wall. The free face, opposite facing, is the only side that is read.
+ * The block emits nothing, so a signal wire skips the meter instead of treating it as a source.
  */
 public final class SignalMeterBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
@@ -75,6 +77,21 @@ public final class SignalMeterBlock extends Block implements EntityBlock {
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return PlateShapes.plate(state.getValue(FACING));
+    }
+
+    @Override
+    protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return 0;
+    }
+
+    @Override
+    protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return 0;
+    }
+
+    @Override
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+        return false;
     }
 
     @Override

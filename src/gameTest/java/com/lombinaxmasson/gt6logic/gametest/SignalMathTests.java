@@ -3,7 +3,6 @@ package com.lombinaxmasson.gt6logic.gametest;
 import com.gregtech.gregtech.api.signal.GtSignalCarrier;
 import com.lombinaxmasson.gt6logic.block.FormulaModuleBlock;
 import com.lombinaxmasson.gt6logic.block.FormulaModuleBlockEntity;
-import com.lombinaxmasson.gt6logic.block.LogicPlateBlock;
 import com.lombinaxmasson.gt6logic.block.ProgramThermostatBlock;
 import com.lombinaxmasson.gt6logic.block.ProgramThermostatBlockEntity;
 import com.lombinaxmasson.gt6logic.block.ProportionalControllerBlock;
@@ -20,13 +19,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
-/** Ratio, proportional, program thermostat, and formula. Front faces west. */
+/** Ratio, proportional, program thermostat, and formula. Front faces north. */
 @GameTestHolder("gt6logic")
 @PrefixGameTestTemplate(false)
 public final class SignalMathTests {
@@ -34,14 +32,14 @@ public final class SignalMathTests {
 
     @GameTest(template = "test_empty", timeoutTicks = 20)
     public static void ratioDoublesTheFront(GameTestHelper helper) {
-        BlockPos pos = place(helper, new BlockPos(2, 1, 2), RatioControllerBlock.BLOCK.get());
-        var front = GameTestSupport.placeProbe(helper, pos.west());
-        front.setPending(Direction.WEST, GtSignalCarrier.UNIT);
-        front.finishTick();
+        BlockPos pos = place(helper, new BlockPos(2, 1, 2), RatioControllerBlock.ITEM.get());
+        var back = GameTestSupport.placeProbe(helper, pos.south());
+        back.setPending(Direction.SOUTH, GtSignalCarrier.UNIT);
+        back.finishTick();
         helper.runAtTickTime(4, () -> {
             helper.assertTrue(ratio(helper, pos).ratio().text().equals("2"), "the default ratio is 2");
-            helper.assertTrue(north(helper, pos) == 2L * GtSignalCarrier.UNIT, "the front is doubled");
-            helper.assertTrue(GameTestSupport.toward(source(helper, pos), Direction.WEST) == 0L, "the front stays quiet");
+            helper.assertTrue(north(helper, pos) == 2L * GtSignalCarrier.UNIT, "the reference is doubled");
+            helper.assertTrue(GameTestSupport.toward(source(helper, pos), Direction.SOUTH) == 0L, "the reference face stays quiet");
             helper.succeed();
         });
     }
@@ -49,7 +47,7 @@ public final class SignalMathTests {
     @GameTest(template = "test_empty", timeoutTicks = 20)
     public static void proportionalOpensWithTheError(GameTestHelper helper) {
         BlockPos relative = new BlockPos(2, 1, 5);
-        BlockPos pos = place(helper, relative, ProportionalControllerBlock.BLOCK.get());
+        BlockPos pos = place(helper, relative, ProportionalControllerBlock.ITEM.get());
         var front = GameTestSupport.placeProbe(helper, pos.west());
         var back = GameTestSupport.placeProbe(helper, pos.east());
         front.setPending(Direction.WEST, 4L * GtSignalCarrier.UNIT);
@@ -70,7 +68,7 @@ public final class SignalMathTests {
 
     @GameTest(template = "test_empty", timeoutTicks = 20)
     public static void programStartsAtTheMashRest(GameTestHelper helper) {
-        BlockPos pos = place(helper, new BlockPos(2, 1, 8), ProgramThermostatBlock.BLOCK.get());
+        BlockPos pos = place(helper, new BlockPos(2, 1, 8), ProgramThermostatBlock.ITEM.get());
         GameTestSupport.placeProbe(helper, pos.west()).finishTick();
         long first = Temperatures.toSignal(52_000L);
         helper.runAtTickTime(3, () -> helper.assertTrue(north(helper, pos) == first, "0 °C against 52 °C opens to that target"));
@@ -90,7 +88,7 @@ public final class SignalMathTests {
     @GameTest(template = "test_empty", timeoutTicks = 40)
     public static void formulaCyclesTheFourPresets(GameTestHelper helper) {
         BlockPos relative = new BlockPos(2, 1, 11);
-        BlockPos pos = place(helper, relative, FormulaModuleBlock.BLOCK.get());
+        BlockPos pos = place(helper, relative, FormulaModuleBlock.ITEM.get());
         var front = GameTestSupport.placeProbe(helper, pos.west());
         var back = GameTestSupport.placeProbe(helper, pos.east());
         front.setPending(Direction.WEST, 6L * GtSignalCarrier.UNIT);
@@ -101,8 +99,8 @@ public final class SignalMathTests {
         helper.runAtTickTime(4, () -> {
             helper.assertTrue(formula(helper, pos).formula().equals(Formula.PRESETS[0]), "the first preset is the half-sum");
             helper.assertTrue(north(helper, pos) == five, "clamp(a * 0.5 + b, 0, 15) is five levels");
-            helper.assertTrue(GameTestSupport.toward(source(helper, pos), Direction.WEST) == 0L, "the front stays quiet");
-            helper.assertTrue(GameTestSupport.toward(source(helper, pos), Direction.EAST) == 0L, "the back stays quiet");
+            helper.assertTrue(GameTestSupport.toward(source(helper, pos), Direction.WEST) == 0L, "the left stays quiet");
+            helper.assertTrue(GameTestSupport.toward(source(helper, pos), Direction.EAST) == 0L, "the right stays quiet");
             helper.useBlock(relative);
         });
         helper.runAtTickTime(8, () -> {
@@ -136,11 +134,8 @@ public final class SignalMathTests {
         });
     }
 
-    private static BlockPos place(GameTestHelper helper, BlockPos relative, Block block) {
-        BlockPos pos = helper.absolutePos(relative);
-        BlockState state = block.defaultBlockState().setValue(LogicPlateBlock.FACING, Direction.WEST);
-        helper.getLevel().setBlockAndUpdate(pos, state);
-        return pos;
+    private static BlockPos place(GameTestHelper helper, BlockPos relative, Item item) {
+        return GameTestSupport.placeGate(helper, item, helper.absolutePos(relative), Direction.NORTH);
     }
 
     private static long north(GameTestHelper helper, BlockPos pos) {

@@ -22,7 +22,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 
 /** Right click changes the setting. The magnifying glass reads it back. */
-public final class ProportionalControllerBlock extends LogicPlateBlock {
+public final class ProportionalControllerBlock extends AnalogPlate {
     public static final DeferredBlock<ProportionalControllerBlock> BLOCK = Gt6Logic.BLOCKS.register("proportional_controller",
             () -> new ProportionalControllerBlock(properties(MapColor.COLOR_RED)));
 
@@ -36,7 +36,7 @@ public final class ProportionalControllerBlock extends LogicPlateBlock {
     public static void bootstrap() {}
 
     public ProportionalControllerBlock(Properties properties) {
-        super(properties);
+        super(properties, true, true, false);
     }
 
     @Override

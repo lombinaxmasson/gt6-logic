@@ -1,0 +1,57 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "gt6logic:block/pip",
+    "mark": "gt6logic:block/pip"
+  },
+  "elements": [
+    {
+      "from": [7.4, 3, 2.15],
+      "to": [8.6, 13, 2.55],
+      "faces": {
+        "north": { "texture": "#mark" },
+        "south": { "texture": "#mark" },
+        "east": { "texture": "#mark" },
+        "west": { "texture": "#mark" },
+        "up": { "texture": "#mark" },
+        "down": { "texture": "#mark" }
+      }
+    },
+    {
+      "from": [8.6, 3, 2.15],
+      "to": [11.2, 4.1, 2.55],
+      "faces": {
+        "north": { "texture": "#mark" },
+        "south": { "texture": "#mark" },
+        "east": { "texture": "#mark" },
+        "west": { "texture": "#mark" },
+        "up": { "texture": "#mark" },
+        "down": { "texture": "#mark" }
+      }
+    },
+    {
+      "from": [8.6, 7.45, 2.15],
+      "to": [10.2, 8.55, 2.55],
+      "faces": {
+        "north": { "texture": "#mark" },
+        "south": { "texture": "#mark" },
+        "east": { "texture": "#mark" },
+        "west": { "texture": "#mark" },
+        "up": { "texture": "#mark" },
+        "down": { "texture": "#mark" }
+      }
+    },
+    {
+      "from": [8.6, 11.9, 2.15],
+      "to": [11.2, 13, 2.55],
+      "faces": {
+        "north": { "texture": "#mark" },
+        "south": { "texture": "#mark" },
+        "east": { "texture": "#mark" },
+        "west": { "texture": "#mark" },
+        "up": { "texture": "#mark" },
+        "down": { "texture": "#mark" }
+      }
+    }
+  ]
+}
