@@ -2,11 +2,11 @@
   "parent": "minecraft:block/cube",
   "textures": {
     "particle": "gt6logic:block/adjustable_heater",
-    "down": "gt6logic:block/plate_edge",
-    "up": "gt6logic:block/plate_edge",
-    "north": "gt6logic:block/adjustable_heater",
+    "down":  "gt6logic:block/plate_edge",
+    "up":    "gt6logic:block/adjustable_heater",
+    "north": "gt6logic:block/port_signal_in",
     "south": "gt6logic:block/plate_edge",
-    "east": "gt6logic:block/plate_edge",
-    "west": "gt6logic:block/plate_edge"
+    "east":  "gt6logic:block/adjustable_heater",
+    "west":  "gt6logic:block/adjustable_heater"
   }
 }

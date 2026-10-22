@@ -33,7 +33,7 @@ public final class SignalMeterRenderer implements BlockEntityRenderer<SignalMete
         pose.translate(0.5, 0.5, 0.5);
         pose.mulPose(PlateTurn.of(facing));
         // Room side of the plate. The dark window ends just behind this.
-        pose.translate(0.0, 0.0, -0.5 + 2.7 / 16.0);
+        pose.translate(0.0, 0.0, -0.5 + 2.65 / 16.0);
         float scale = 0.010F;
         pose.scale(scale, -scale, scale);
         float width = font.width(text);
@@ -41,7 +41,7 @@ public final class SignalMeterRenderer implements BlockEntityRenderer<SignalMete
                 text,
                 -width / 2.0F,
                 -4.0F,
-                0xFFFFE8C8,
+                0xFF70F5B8,
                 false,
                 pose.last().pose(),
                 buffer,

@@ -1,7 +1,6 @@
 {
-  "parent": "gt6logic:block/plate",
+  "parent": "gt6logic:block/readout_plate",
   "textures": {
-    "front": "gt6logic:block/digit_display",
-    "lamp": "gt6logic:block/lamp_off"
+    "front": "gt6logic:block/digit_display"
   }
 }

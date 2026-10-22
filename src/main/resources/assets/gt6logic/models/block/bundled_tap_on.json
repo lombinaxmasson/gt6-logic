@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "gt6logic:block/bundled_tap_on",
+    "down":  "gt6logic:block/bundled_tap_side",
+    "up":    "gt6logic:block/bundled_tap_side",
+    "north": "gt6logic:block/bundled_tap_on",
+    "south": "gt6logic:block/bundled_tap_cable",
+    "west":  "gt6logic:block/bundled_tap_side",
+    "east":  "gt6logic:block/bundled_tap_side"
+  }
+}

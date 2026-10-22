@@ -2,11 +2,11 @@
   "parent": "minecraft:block/cube",
   "textures": {
     "particle": "gt6logic:block/electric_valve",
-    "down": "gt6logic:block/plate_edge",
-    "up": "gt6logic:block/plate_edge",
+    "down":  "gt6logic:block/plate_edge",
+    "up":    "gt6logic:block/plate_edge",
     "north": "gt6logic:block/electric_valve",
-    "south": "gt6logic:block/plate_edge",
-    "east": "gt6logic:block/plate_edge",
-    "west": "gt6logic:block/plate_edge"
+    "south": "gt6logic:block/port_fluid_in",
+    "west":  "gt6logic:block/port_signal_in",
+    "east":  "gt6logic:block/plate_edge"
   }
 }

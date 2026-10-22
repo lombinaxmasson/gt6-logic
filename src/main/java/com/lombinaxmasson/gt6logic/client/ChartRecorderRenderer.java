@@ -35,8 +35,8 @@ public final class ChartRecorderRenderer implements BlockEntityRenderer<ChartRec
         pose.pushPose();
         pose.translate(0.5, 0.5, 0.5);
         pose.mulPose(PlateTurn.of(facing));
-        float z = -0.5F + 2.5F / 16F;
-        float span = 0.72F;
+        float z = -0.5F + 2.40F / 16F;
+        float span = 0.58F;
         float left = -span / 2F;
         float slot = span / count;
         for (int i = 0; i < count; i++) {
@@ -45,8 +45,10 @@ public final class ChartRecorderRenderer implements BlockEntityRenderer<ChartRec
                 continue;
             }
             float x0 = left + i * slot;
-            float y0 = -0.28F;
-            FaceMark.quad(pose, buffer, MARK, x0, y0, x0 + slot * 0.65F, y0 + fraction * 0.56F, z, 0xFFB7F0C2);
+            float y0 = -0.22F;
+            float h = fraction * 0.44F;
+            int barColor = i == count - 1 ? 0xFF72F5B0 : 0xFF38C98A;
+            FaceMark.quad(pose, buffer, MARK, x0, y0, x0 + slot * 0.68F, y0 + h, z, barColor);
         }
         pose.popPose();
     }

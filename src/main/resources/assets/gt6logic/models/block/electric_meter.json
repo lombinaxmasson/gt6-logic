@@ -1,6 +1,12 @@
 {
-  "parent": "minecraft:block/cube_all",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "all": "gt6logic:block/electric_meter"
+    "particle": "gt6logic:block/electric_meter",
+    "down":  "gt6logic:block/plate_edge",
+    "up":    "gt6logic:block/electric_meter",
+    "north": "gt6logic:block/electric_meter",
+    "south": "gt6logic:block/port_signal_out",
+    "west":  "gt6logic:block/electric_meter",
+    "east":  "gt6logic:block/electric_meter"
   }
 }
