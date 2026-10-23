@@ -1,7 +1,0 @@
-{
-  "parent": "gt6logic:block/analog_plate",
-  "textures": {
-    "front": "gt6logic:block/program_thermostat",
-    "lamp": "gt6logic:block/lamp_off"
-  }
-}

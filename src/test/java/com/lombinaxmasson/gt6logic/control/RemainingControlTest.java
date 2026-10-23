@@ -50,26 +50,6 @@ class RemainingControlTest {
     }
 
     @Test
-    void temperatureRoundTripsOnTenDegreeSteps() {
-        assertEquals(0L, Temperatures.toSignal(0L));
-        assertEquals(3 * UNIT, Temperatures.toSignal(30_000L));
-        assertEquals(FULL, Temperatures.toSignal(150_000L));
-        assertEquals(FULL, Temperatures.toSignal(200_000L));
-        assertEquals(30_000L, Temperatures.toMilli(3 * UNIT));
-        assertEquals("30.0", Temperatures.format(30_000L));
-        assertEquals("52.5", Temperatures.format(52_500L));
-    }
-
-    @Test
-    void mashScheduleHoldsTheLastStep() {
-        assertEquals(52_000, TemperatureSchedule.setpointMilli(0));
-        assertEquals(52_000, TemperatureSchedule.setpointMilli(TemperatureSchedule.SEGMENT_TICKS - 1));
-        assertEquals(63_000, TemperatureSchedule.setpointMilli(TemperatureSchedule.SEGMENT_TICKS));
-        assertEquals(78_000, TemperatureSchedule.setpointMilli(TemperatureSchedule.SEGMENT_TICKS * 10));
-        assertEquals(3, TemperatureSchedule.segment(TemperatureSchedule.SEGMENT_TICKS * 10));
-    }
-
-    @Test
     void formulaSpeaksInLevels() {
         assertEquals(2 * UNIT, Formula.evaluate("clamp(a * 0.5 + b, 0, 15)", 2 * UNIT, UNIT).signal());
         assertEquals(UNIT, Formula.evaluate("min(a, b)", 4 * UNIT, UNIT).signal());
@@ -89,14 +69,12 @@ class RemainingControlTest {
     }
 
     @Test
-    void flowAndPortionAndPower() {
+    void flowAndPortion() {
         assertEquals(250, FlowRate.millibuckets(UNIT, 250, false));
         assertEquals(0, FlowRate.millibuckets(0L, 250, false));
         assertEquals(3, FlowRate.millibuckets(3 * UNIT, 15, true));
         assertEquals(124, FlowRate.millibuckets(FULL / 2, 250, true));
         assertEquals(0, FlowRate.millibuckets(0L, 250, true));
-        assertEquals(32L, PowerDraw.eu(FULL, PowerDraw.LV_PACKET));
-        assertEquals(0L, PowerDraw.eu(0L, PowerDraw.LV_PACKET));
         assertEquals(2_000, TenThousandths.of(2_000, 10_000));
         assertEquals(10_000, TenThousandths.of(11, 10));
         assertEquals(0, TenThousandths.of(5, 0));

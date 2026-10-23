@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "gt6logic:block/tank_top",
-    "side": "gt6logic:block/tank"
-  }
-}

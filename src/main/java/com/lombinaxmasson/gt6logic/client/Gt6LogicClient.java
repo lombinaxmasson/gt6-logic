@@ -2,7 +2,6 @@ package com.lombinaxmasson.gt6logic.client;
 
 import com.lombinaxmasson.gt6logic.Gt6Logic;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlock;
-import com.lombinaxmasson.gt6logic.block.DigitDisplayBlock;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.SignalMeterBlock;
 
@@ -19,7 +18,6 @@ public final class Gt6LogicClient {
     @SubscribeEvent
     public static void renderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(SignalMeterBlock.TYPE.get(), SignalMeterRenderer::new);
-        event.registerBlockEntityRenderer(DigitDisplayBlock.TYPE.get(), DigitDisplayRenderer::new);
         event.registerBlockEntityRenderer(PointerGaugeBlock.TYPE.get(), PointerGaugeRenderer::new);
         event.registerBlockEntityRenderer(ChartRecorderBlock.TYPE.get(), ChartRecorderRenderer::new);
     }

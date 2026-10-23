@@ -4,28 +4,17 @@ import org.slf4j.Logger;
 
 import com.gregtech.gregtech.api.addon.GregTechAddon;
 import com.gregtech.gregtech.api.addon.GregTechAddons;
-import com.lombinaxmasson.gt6logic.block.AdjustableCoolerBlock;
-import com.lombinaxmasson.gt6logic.block.AdjustableHeaterBlock;
 import com.lombinaxmasson.gt6logic.block.AdjustablePumpBlock;
 import com.lombinaxmasson.gt6logic.block.ArithmeticBlock;
-import com.lombinaxmasson.gt6logic.block.BatteryStewardBlock;
 import com.lombinaxmasson.gt6logic.block.BundledTapBlock;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlock;
 import com.lombinaxmasson.gt6logic.block.CompensationRepeaterBlock;
 import com.lombinaxmasson.gt6logic.block.ControlValveBlock;
-import com.lombinaxmasson.gt6logic.block.DigitDisplayBlock;
-import com.lombinaxmasson.gt6logic.block.ElectricMeterBlock;
-import com.lombinaxmasson.gt6logic.block.ElectricValveBlock;
-import com.lombinaxmasson.gt6logic.block.FloatSwitchBlock;
 import com.lombinaxmasson.gt6logic.block.FormulaModuleBlock;
-import com.lombinaxmasson.gt6logic.block.LevelGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlock;
-import com.lombinaxmasson.gt6logic.block.ProgramThermostatBlock;
 import com.lombinaxmasson.gt6logic.block.ProportionalControllerBlock;
 import com.lombinaxmasson.gt6logic.block.RatioControllerBlock;
 import com.lombinaxmasson.gt6logic.block.SignalMeterBlock;
-import com.lombinaxmasson.gt6logic.block.TankBlock;
-import com.lombinaxmasson.gt6logic.block.ThermostatBlock;
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.Registries;
@@ -62,7 +51,7 @@ public final class Gt6Logic {
             CREATIVE_MODE_TABS.register("main", () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.gt6logic"))
                     .withTabsBefore(CreativeModeTabs.REDSTONE_BLOCKS)
-                    .icon(() -> new ItemStack(ElectricMeterBlock.ITEM.get()))
+                    .icon(() -> new ItemStack(SignalMeterBlock.ITEM.get()))
                     .displayItems((parameters, output) -> ITEMS.getEntries()
                             .forEach(item -> output.accept(item.get())))
                     .build());
@@ -74,20 +63,9 @@ public final class Gt6Logic {
         ArithmeticBlock.bootstrap();
         RatioControllerBlock.bootstrap();
         ProportionalControllerBlock.bootstrap();
-        ProgramThermostatBlock.bootstrap();
         FormulaModuleBlock.bootstrap();
-        TankBlock.bootstrap();
-        ElectricValveBlock.bootstrap();
         ControlValveBlock.bootstrap();
         AdjustablePumpBlock.bootstrap();
-        FloatSwitchBlock.bootstrap();
-        LevelGaugeBlock.bootstrap();
-        AdjustableHeaterBlock.bootstrap();
-        AdjustableCoolerBlock.bootstrap();
-        ThermostatBlock.bootstrap();
-        ElectricMeterBlock.bootstrap();
-        BatteryStewardBlock.bootstrap();
-        DigitDisplayBlock.bootstrap();
         PointerGaugeBlock.bootstrap();
         ChartRecorderBlock.bootstrap();
         BLOCKS.register(modEventBus);

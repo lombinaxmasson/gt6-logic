@@ -50,7 +50,7 @@ SDK 里的三个接口：`GtSignalCarrier`、`GtSignalSource`、`GtSignalReceive
 
 GT6CE 有 20 种传感器面板（`SensorBlockEntity`），8 种模式：显示、大于、等于、小于、缩放、百分比、满、未满，可以对读数取平均。已核实的行为：
 
-- **输出只有 0–15 的整数级。** 传感器不实现 `GtSignalSource`，信号线读到的是 `getSignal * UNIT`。所以从本体传感器来的信号没有小数部分。
+- **输出只有 0–15 的整数级。** 传感器不实现 `GtSignalSource`，信号线读到的是 `getSignal * UNIT`。所以从本体传感器来的信号没有小数部分。百分比和缩放模式会输出连续的 0–15，其余模式是 0 或 15。输出在除输入面外的五个面。
 - **流体和物品类传感器**（液位、物品、容量、重量）通过 NeoForge 能力读目标：`Capabilities.FluidHandler.BLOCK`、`Capabilities.ItemHandler.BLOCK`。所以**我们自己的方块只要注册了这两种能力，本体传感器就能读**（待验证）。
 - **进度传感器**读 `ProgressSensorSource` 接口或 GT 的机器控制。这个接口在 GT 的 `core/src/main` 里，**不在 SDK 里**，附属实现不了。
 - **温度计**只认 GT 的坩埚，没有通用接口。
@@ -68,12 +68,12 @@ GT6CE 有 20 种传感器面板（`SensorBlockEntity`），8 种模式：显示�
 - GUI 只能用声明的控件：物品槽、储罐、能量条、进度箭头、开关。没有数字输入、滑条、曲线。
 - 只有单方块。
 
-结论：控制元件（恒温器、浮球开关、定时器……）一律写成**附属自己的方块和方块实体**，GUI 自己画。工艺机器先看需求：只需要“被控制”、不需要“报告读数”的，可以用行为机器；需要往外报读数的，自己写方块实体。
+结论：本模组的控制元件（调节阀、比例控制器、信号表……）一律写成**附属自己的方块和方块实体**，GUI 自己画。测量和开关控制由 GT 本体提供；本模组不再规划工艺机器。
 
 ### 其他会用到的 API
 
 - `AddonTools.isMagnifyingGlass` / `AddonTools.matches`：放大镜右键读精确值。`AddonTool` 目前只有 `SPADE`、`UNIVERSAL_SPADE`、`MAGNIFYING_GLASS`，**没有螺丝刀、扳手、软锤**。
-- `EnergyBlock` / `AddonEnergy`：附属自己的方块实现 `EnergyBlock`，GT 的 EU 电缆就能往里送电或抽电。用电的执行器（加热器、电动阀）走这里。
+- `EnergyBlock` / `AddonEnergy`：附属自己的方块实现 `EnergyBlock`，GT 的 EU 电缆就能往里送电或抽电。用电的执行器（可调泵）走这里。
 - `AddonRecipes`：往已有的 GT 配方表加行，例如元件的组装配方。合成表配方用自己的数据包。
 - `AddonFluids`：按 GT 流体字段名取流体，例如冷却水、蒸汽。
 - `AddonMaterialContributor`：如果工艺线需要新材料（例如硝化产物），按名字声明。
@@ -83,12 +83,12 @@ GT6CE 有 20 种传感器面板（`SensorBlockEntity`），8 种模式：显示�
 
 这些是这块附属自己的约定，GameTest 或 JUnit 盖过的才写在这里。
 
-- **电的短名**是 `EU`，热量是 `HU`，冷量是 `CU`。用电的方块实现 `EnergyBlock`，并且只重写 `doInject` / `doExtract`。`doEnergyInjection` 留在接口默认实现上，电压门先跑。推荐输入是 LV，32 EU 一包。HU 和 CU 的推荐输出大小是 1，小的量也能过门。
-- **电表**是自己的电容器，容量 10240 EU。EU 六个面既进也出。信号只写在朝向的反面，不是去读别人的电池。管家贴在这一面才读得到。
-- **加热器和冷却器**把这一拍花掉的 EU 原数提供成 HU 或 CU。没抽走的下一拍就没了。它们不改 GT 坩埚的温度。
-- **储罐**在每个面注册 `Capabilities.FluidHandler.BLOCK`，侧面为空的查询也指向同一只 16000 mB 的罐子。打破储罐，流体消失。
-- **阀和泵**不提供流体能力。它们在自己的 tick 里向入口邻居抽、向出口邻居灌，邻居要有 `IFluidHandler`。GameTest 用两只储罐。GT 流体管只要那一面有这个能力就能接，这一轮没有在游戏里接过管子。
-- **温度**：0 信号是 0 °C，满信号是 150 °C。机器若能报毫摄氏度，实现 `TemperatureSource`。没有这个接口时，恒温器和程序控温器把邻面的信号译成温度。本体坩埚仍读不到。
+- **电的短名**是 `EU`。用电的方块实现 `EnergyBlock`，并且只重写 `doInject` / `doExtract`。`doEnergyInjection` 留在接口默认实现上，电压门先跑。推荐输入是 LV，32 EU 一包。
+- **阀和泵**不提供流体能力。它们在自己的 tick 里向入口邻居抽、向出口邻居灌，邻居要有 `IFluidHandler`。它们自己不存流体。
+- **GT 流体管道**注册了 `Capabilities.FluidHandler.BLOCK`。管道的面处理器只有在对应连接位为 `true` 时才接受填充；连接位由扳手打开，自动连接只认相邻管道。所以玩家要把管道朝向阀的那一面先用扳手接通。
+- **GT 机器**也注册了同一个能力，按面配置流体输入/输出。阀要对着机器的进液面。所有基础机器都注册了 fluid handler，具体哪一面有效取于机器的面配置。
+- **机器缓冲**：流动供给减半时，机器会先吃内部缓冲。只有缓冲耗尽，或面对锅炉、涡轮这类连续消耗者，供给计量才会直接改变处理速率。
+- **热量**：本模组暂时不做。可调加热器/冷却器和温度接口已经随重复方块删除；等上游出现能消费外部 HU/CU 的机器，再按流体同样的方式验证。
 
 ## 需要向上游提的 API
 
@@ -106,4 +106,5 @@ GT6CE 有 20 种传感器面板（`SensorBlockEntity`），8 种模式：显示�
 
 - 纯逻辑（数值换算、回差判定、定时器状态机）写 JUnit，放 `src/test`，不依赖游戏。
 - 和信号线的交互写 GameTest，放 `src/gameTest`。GT6CE 自己的 `SignalWireAddonTests` 是“附属信号源接到信号线上”的现成样例，可以照着写。
+- GT 流体的互操作写在 `Gt6FluidInteropTests`：用 `gregtech:pipe_medium_steel` 和 `gregtech:drum_bronze`，验证比例阀送出的水能穿过 GT 管道进入 GT 储罐，并验证满信号与半信号的送达量大约是两倍关系。
 - `gradlew runGameTestServer` 跑全部 GameTest。没有任何 GameTest 时服务端会报错退出，这是正常的。

@@ -5,28 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gregtech.gregtech.api.signal.GtSignalCarrier;
-import com.lombinaxmasson.gt6logic.control.DisplayReading.Unit;
 
 import org.junit.jupiter.api.Test;
 
 class RoomControlTest {
     private static final long UNIT = GtSignalCarrier.UNIT;
     private static final long FULL = 15L * UNIT;
-
-    @Test
-    void digitDisplaySpeaksThreeUnits() {
-        assertEquals("0.5000", DisplayReading.face(Unit.SIGNAL, UNIT / 2));
-        assertEquals("0.5000", DisplayReading.argument(Unit.SIGNAL, UNIT / 2));
-        assertEquals("30.0", DisplayReading.face(Unit.TEMPERATURE, 3 * UNIT));
-        assertEquals("20%", DisplayReading.face(Unit.PERCENT, 3 * UNIT));
-        assertEquals("20", DisplayReading.argument(Unit.PERCENT, 3 * UNIT));
-        assertEquals("100%", DisplayReading.face(Unit.PERCENT, FULL));
-        assertEquals("0%", DisplayReading.face(Unit.PERCENT, 0L));
-        assertEquals(3, DisplayReading.percent(UNIT / 2));
-        assertEquals(Unit.TEMPERATURE, Unit.SIGNAL.next());
-        assertEquals(Unit.SIGNAL, Unit.PERCENT.next());
-        assertEquals(Unit.SIGNAL, Unit.byName("nope"));
-    }
 
     @Test
     void pointerStopsShortOfAFullTurn() {

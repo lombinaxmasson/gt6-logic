@@ -5,7 +5,6 @@ import com.lombinaxmasson.gt6logic.block.AnalogPlate;
 import com.lombinaxmasson.gt6logic.block.ArithmeticBlock;
 import com.lombinaxmasson.gt6logic.block.FormulaModuleBlock;
 import com.lombinaxmasson.gt6logic.block.FormulaModuleBlockEntity;
-import com.lombinaxmasson.gt6logic.block.ProgramThermostatBlock;
 import com.lombinaxmasson.gt6logic.block.ProportionalControllerBlock;
 import com.lombinaxmasson.gt6logic.block.RatioControllerBlock;
 import com.lombinaxmasson.gt6logic.control.Formula;
@@ -116,12 +115,11 @@ public final class AnalogPlateTests {
     }
 
     @GameTest(template = "test_empty", timeoutTicks = 20)
-    public static void fivePlatesFaceTheWayThePlayerLooks(GameTestHelper helper) {
+    public static void fourPlatesFaceTheWayThePlayerLooks(GameTestHelper helper) {
         place(helper, ArithmeticBlock.ITEM.get(), new BlockPos(2, 1, 2), Direction.NORTH);
         place(helper, ProportionalControllerBlock.ITEM.get(), new BlockPos(5, 1, 2), Direction.EAST);
         place(helper, RatioControllerBlock.ITEM.get(), new BlockPos(8, 1, 2), Direction.SOUTH);
         place(helper, FormulaModuleBlock.ITEM.get(), new BlockPos(11, 1, 2), Direction.WEST);
-        place(helper, ProgramThermostatBlock.ITEM.get(), new BlockPos(14, 1, 2), Direction.NORTH);
         helper.succeed();
     }
 

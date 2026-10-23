@@ -1,5 +1,7 @@
 # 重新设计
 
+> 2026-10-23 更新：方案 B 之后的下一步方向见 [`供给计量方向卡`](../card-plans/active/供给计量方向卡.md)。开关量仍交给 ProjectRed；测量和开关控制交给 GT6 本体；本模组只做连续量。下面保留方案 A/B 选择时的历史结论。
+
 现在的逻辑元件不能用来搭电路。这里有两份互斥的方案，**选定的是方案 B**：
 
 - [`b-projectred-bridge.md`](b-projectred-bridge.md)（选定）：开关量逻辑交给 ProjectRed，本模组让 GT 线缆和 GT 机器接进 ProjectRed 的电路。

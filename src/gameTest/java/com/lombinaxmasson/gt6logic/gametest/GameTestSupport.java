@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -22,11 +23,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
 /** Placement helpers shared by the second-tier block tests. */
 public final class GameTestSupport {
@@ -119,6 +124,24 @@ public final class GameTestSupport {
         BlockPos placed = placeBlock(helper, item, support, Direction.UP, facing.getOpposite());
         helper.assertTrue(placed.equals(pos), item + " landed at " + placed + " instead of " + pos);
         return placed;
+    }
+
+    /** A GT6 block by registry path, so tests can use the real transport instead of a stand-in tank. */
+    public static Block gtBlock(String path) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath("gregtech", path);
+        if (!BuiltInRegistries.BLOCK.containsKey(id)) {
+            throw new IllegalStateException("missing GT block " + id);
+        }
+        return BuiltInRegistries.BLOCK.get(id);
+    }
+
+    public static BlockPos placeGtBlock(GameTestHelper helper, String path, BlockPos pos) {
+        helper.getLevel().setBlockAndUpdate(pos, gtBlock(path).defaultBlockState());
+        return pos;
+    }
+
+    public static IFluidHandler fluidHandler(Level level, BlockPos pos, Direction side) {
+        return FluidUtil.getFluidHandler(level, pos, side).orElse(null);
     }
 
     public static String translation(String file, String key) {

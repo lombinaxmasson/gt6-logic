@@ -3,8 +3,6 @@ package com.lombinaxmasson.gt6logic.gametest;
 import com.gregtech.gregtech.api.signal.GtSignalCarrier;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlock;
 import com.lombinaxmasson.gt6logic.block.ChartRecorderBlockEntity;
-import com.lombinaxmasson.gt6logic.block.DigitDisplayBlock;
-import com.lombinaxmasson.gt6logic.block.DigitDisplayBlockEntity;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlock;
 import com.lombinaxmasson.gt6logic.block.PointerGaugeBlockEntity;
 import com.lombinaxmasson.gt6logic.block.SignalMeterBlock;
@@ -48,24 +46,6 @@ public final class ReadoutFaceTests {
         helper.runAtTickTime(14, () -> {
             helper.assertTrue(GameTestSupport.wire(helper, pos.north()) > 0L, "the side wire is still live");
             helper.assertTrue(entity(helper, pos, SignalMeterBlockEntity.class).reading() == 0L, "another face reads as zero");
-            helper.succeed();
-        });
-    }
-
-    @GameTest(template = "test_empty", timeoutTicks = 40)
-    public static void digitDisplayReadsOnlyTheFreeFace(GameTestHelper helper) {
-        BlockPos pos = place(helper, DigitDisplayBlock.ITEM.get(), new BlockPos(2, 1, 2));
-        feed(helper, pos);
-        helper.runAtTickTime(8, () -> {
-            long front = GameTestSupport.wire(helper, pos.east());
-            DigitDisplayBlockEntity display = entity(helper, pos, DigitDisplayBlockEntity.class);
-            helper.assertTrue(front == 4L * GtSignalCarrier.UNIT, "front wire is four, saw " + front);
-            helper.assertTrue(display.reading() == front, "the display reads the front wire, saw " + display.reading());
-            helper.getLevel().setBlockAndUpdate(pos.east(), Blocks.AIR.defaultBlockState());
-            assertNoRedstone(helper, pos);
-        });
-        helper.runAtTickTime(14, () -> {
-            helper.assertTrue(entity(helper, pos, DigitDisplayBlockEntity.class).reading() == 0L, "another face reads as zero");
             helper.succeed();
         });
     }
